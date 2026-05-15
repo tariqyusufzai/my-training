@@ -1,0 +1,844 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8"/>
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover"/>
+<meta name="apple-mobile-web-app-capable" content="yes"/>
+<meta name="apple-mobile-web-app-status-bar-style" content="default"/>
+<meta name="apple-mobile-web-app-title" content="My Training"/>
+<meta name="theme-color" content="#10B981"/>
+<link rel="manifest" href="manifest.json"/>
+<link rel="apple-touch-icon" href="icons/apple-touch-icon.png"/>
+<link rel="icon" type="image/png" sizes="32x32" href="icons/favicon-32.png"/>
+<link rel="preconnect" href="https://fonts.googleapis.com"/>
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Barlow+Condensed:wght@700;800;900&family=Outfit:wght@400;500;600&display=swap"/>
+<title>My Training</title>
+<style>
+*{box-sizing:border-box;margin:0;padding:0;-webkit-tap-highlight-color:transparent}
+:root{
+  --bg:#F4F2EC;--surface:#fff;--card:#fff;--raised:#F9F8F4;
+  --border:#E4E1D8;--text:#161412;--sub:#5C5750;--muted:#9B9589;--dim:#C4BFB5;
+  --blue:#1B4FE4;--orange:#D94F0A;--teal:#0A8A68;--violet:#6D28D9;
+  --red:#C42020;--cyan:#0A7EA4;--green:#10B981;
+}
+body{background:var(--bg);color:var(--text);font-family:'Outfit',sans-serif;min-height:100vh;max-width:880px;margin:0 auto;padding-bottom:env(safe-area-inset-bottom)}
+h1,h2,.bc{font-family:'Barlow Condensed',sans-serif;font-weight:800;letter-spacing:.08em}
+
+/* HERO */
+.hero{background:var(--surface);border-bottom:1px solid var(--border);padding:28px 20px 22px}
+.hero-title{font-family:'Barlow Condensed',sans-serif;font-size:42px;font-weight:900;line-height:1;letter-spacing:-.01em}
+.hero-sub{color:var(--sub);font-size:12px;margin-top:6px;letter-spacing:.04em}
+.chips{display:flex;gap:6px;flex-wrap:wrap;margin-bottom:12px}
+.chip{display:inline-block;padding:2px 9px;border-radius:99px;font-size:10px;font-weight:700;letter-spacing:.09em;text-transform:uppercase}
+.stats-grid{display:grid;grid-template-columns:repeat(3,1fr);gap:8px;margin-top:18px}
+.stat-box{background:var(--card);border:1px solid var(--border);border-radius:11px;padding:11px 10px;text-align:center}
+.stat-val{font-family:'Barlow Condensed',sans-serif;font-size:19px;font-weight:900;letter-spacing:-.01em}
+.stat-label{font-size:9px;color:var(--muted);text-transform:uppercase;letter-spacing:.12em;margin-top:2px}
+
+/* TABS */
+.tabs{display:flex;border-bottom:1px solid var(--border);background:var(--surface);overflow-x:auto;position:sticky;top:0;z-index:100;-webkit-overflow-scrolling:touch}
+.tabs::-webkit-scrollbar{display:none}
+.tab-btn{background:none;border:none;border-bottom:2px solid transparent;color:var(--muted);font-size:11px;font-weight:700;letter-spacing:.1em;text-transform:uppercase;padding:13px 16px;cursor:pointer;white-space:nowrap;font-family:'Outfit',sans-serif;transition:color .2s}
+.tab-btn.active{border-bottom-color:var(--blue);color:var(--blue)}
+
+/* CONTENT */
+.content{padding:20px 20px 80px}
+
+/* CARDS */
+.card{background:var(--card);border:1px solid var(--border);border-radius:14px;padding:20px;margin-bottom:13px}
+.card-head{font-family:'Barlow Condensed',sans-serif;font-size:16px;font-weight:800;letter-spacing:.1em;margin-bottom:15px}
+
+/* BANNER */
+.banner{border-radius:12px;padding:14px 16px;display:flex;align-items:flex-start;gap:13px;margin-bottom:12px}
+.banner-icon{font-size:20px;flex-shrink:0;margin-top:1px}
+.banner-title{font-family:'Barlow Condensed',sans-serif;font-size:13px;font-weight:800;letter-spacing:.1em;margin-bottom:3px}
+.banner-body{font-size:11px;color:var(--sub);line-height:1.65}
+
+/* VOLUME BARS */
+.vol-grid{display:grid;grid-template-columns:1fr 1fr;gap:9px 28px}
+.vol-row{margin-bottom:2px}
+.vol-top{display:flex;justify-content:space-between;align-items:center;margin-bottom:4px}
+.vol-label{font-size:11px;color:var(--sub)}
+.vol-val{font-size:10px;font-weight:700}
+.bar-bg{background:var(--border);border-radius:99px;height:5px;flex:1}
+.bar-fill{border-radius:99px;height:100%;transition:width .4s}
+
+/* PHASE BTNS */
+.phase-btns{display:grid;grid-template-columns:repeat(3,1fr);gap:10px;margin-bottom:20px}
+.phase-btn{background:var(--card);border:1.5px solid var(--border);border-radius:12px;padding:14px 8px;cursor:pointer;text-align:center;transition:all .2s}
+.phase-btn.active{border-width:2px}
+.phase-icon{font-size:22px;display:block;margin-bottom:5px}
+.phase-name{font-size:10px;font-weight:700;letter-spacing:.1em;text-transform:uppercase}
+
+/* SCHEDULE */
+.sched-list{}
+.sched-row{display:flex;align-items:flex-start;gap:10px;padding:7px 0;border-bottom:1px solid var(--border)}
+.sched-day{font-size:9px;font-weight:700;color:var(--muted);width:28px;flex-shrink:0;padding-top:2px;letter-spacing:.1em}
+.sched-gym{font-size:12px}
+.sched-add{font-size:10px;color:var(--muted);margin-top:1px}
+
+/* EXPANDABLE */
+.expand-card{background:var(--card);border:1px solid var(--border);border-radius:14px;margin-bottom:10px;overflow:hidden}
+.expand-btn{width:100%;background:none;border:none;cursor:pointer;padding:15px 18px;display:flex;align-items:center;gap:12px;text-align:left;font-family:'Outfit',sans-serif}
+.expand-dot{width:10px;height:10px;border-radius:50%;flex-shrink:0}
+.expand-name{font-family:'Barlow Condensed',sans-serif;font-size:18px;font-weight:900;letter-spacing:.06em}
+.expand-focus{font-size:10px;color:var(--muted);margin-top:2px}
+.expand-arrow{margin-left:auto;font-size:13px;color:var(--dim)}
+.expand-body{border-top:1px solid var(--border);display:none}
+.expand-body.open{display:block}
+
+/* EXERCISE ROWS */
+.ex-header{padding:8px 18px;background:var(--raised);border-bottom:1px solid var(--border);display:flex;gap:18px}
+.ex-range{display:flex;align-items:center;gap:5px;font-size:10px;color:var(--dim)}
+.ex-range-line{width:14px;height:2px;border-radius:99px;opacity:.5}
+.ex-row{display:flex;align-items:center;padding:11px 18px;gap:12px;border-bottom:1px solid var(--border)}
+.ex-row:last-child{border-bottom:none}
+.ex-num{width:24px;height:24px;border-radius:6px;display:flex;align-items:center;justify-content:center;font-size:10px;font-weight:700;flex-shrink:0}
+.ex-name{flex:1;font-size:12px}
+.ex-note{font-size:10px;color:var(--muted);margin-top:2px}
+.ex-sets,.ex-reps{text-align:center;min-width:36px}
+.ex-sets-val,.ex-reps-val{font-size:14px;font-weight:700}
+.ex-sets-label,.ex-reps-label{font-size:8px;color:var(--dim);text-transform:uppercase;letter-spacing:.1em}
+
+/* CORE TABLE */
+.core-table{width:100%;border-collapse:collapse;font-size:11px}
+.core-table th{padding:7px 8px;font-size:9px;color:var(--muted);text-transform:uppercase;letter-spacing:.08em;text-align:center;border-bottom:2px solid var(--border)}
+.core-table th:first-child{text-align:left;min-width:130px}
+.core-table td{padding:9px 8px;border-bottom:1px solid var(--border);text-align:center;vertical-align:middle}
+.core-table td:first-child{text-align:left}
+.core-ex-name{font-size:11px;font-weight:600}
+.core-ex-day{font-size:9px;margin-top:2px}
+.core-pct{font-size:10px;font-weight:700;margin-bottom:3px}
+.mini-bar-bg{width:38px;height:3px;background:var(--border);border-radius:99px;margin:0 auto}
+.mini-bar-fill{height:100%;border-radius:99px}
+
+/* SKILLS */
+.skill-row{display:flex;align-items:center;gap:10px;margin-bottom:8px}
+.skill-label{font-size:11px;color:var(--sub);width:185px;flex-shrink:0}
+.skill-pct{font-size:10px;font-weight:700;width:30px;text-align:right;flex-shrink:0}
+
+/* ZONE CARDS */
+.zone-grid{display:grid;grid-template-columns:repeat(3,1fr);gap:9px;margin-bottom:13px}
+.zone-card{border-radius:10px;padding:13px;border-top:3px solid}
+.zone-name{font-family:'Barlow Condensed',sans-serif;font-size:15px;font-weight:800}
+.zone-intensity{font-size:10px;font-weight:600;margin-top:3px}
+.zone-feel{font-size:9px;color:var(--muted);margin-top:2px;font-style:italic}
+.zone-use{font-size:9px;font-weight:700;margin-top:7px}
+
+/* PROTOCOL GRID */
+.proto-grid{display:grid;grid-template-columns:1fr 1fr;gap:11px;margin-bottom:13px}
+.proto-card{background:var(--card);border:1px solid var(--border);border-radius:13px;padding:16px}
+.proto-title{font-family:'Barlow Condensed',sans-serif;font-size:13px;font-weight:800;letter-spacing:.08em;margin-bottom:10px}
+.proto-item{display:flex;gap:7px;margin-bottom:5px;align-items:flex-start}
+.proto-dot{width:4px;height:4px;border-radius:50%;margin-top:4px;flex-shrink:0}
+.proto-text{font-size:10px;color:var(--sub);line-height:1.5}
+
+/* IN-SEASON WEEK GRID */
+.week-grid{display:grid;grid-template-columns:repeat(7,1fr);gap:6px;margin-bottom:14px}
+.week-card{border-radius:9px;padding:10px 5px;text-align:center;border-top:3px solid}
+.week-day{font-size:8px;font-weight:700;color:var(--muted);letter-spacing:.1em;margin-bottom:6px}
+.week-session{font-size:9px;font-weight:700;line-height:1.3;margin-bottom:4px}
+.week-detail{font-size:8px;color:var(--dim);line-height:1.3}
+
+/* IN-SEASON RULES */
+.rules-grid{display:grid;grid-template-columns:1fr 1fr;gap:10px}
+.rule-card{border-radius:10px;padding:12px;border-left:3px solid}
+.rule-title{font-size:10px;font-weight:700;line-height:1.3;margin-bottom:5px}
+.rule-body{font-size:10px;color:var(--sub);line-height:1.5}
+
+/* NON-NEG GRID */
+.nonneg-grid{display:grid;grid-template-columns:repeat(3,1fr);gap:9px}
+.nonneg-card{background:var(--raised);border:1px solid var(--border);border-radius:11px;padding:13px}
+.nonneg-icon{font-size:20px;margin-bottom:6px;display:block}
+.nonneg-label{font-size:9px;color:var(--muted);text-transform:uppercase;letter-spacing:.12em}
+.nonneg-val{font-size:12px;font-weight:600;margin-top:3px}
+
+/* COMPARE TABLE */
+.compare-grid{display:grid;grid-template-columns:repeat(3,1fr);gap:10px;margin-top:13px}
+.compare-card{background:var(--card);border:1px solid var(--border);border-radius:12px;padding:14px}
+.compare-head{font-size:9px;color:var(--muted);text-transform:uppercase;letter-spacing:.12em;margin-bottom:10px}
+.compare-row{display:flex;align-items:center;gap:7px;margin-bottom:7px}
+.compare-dot{width:6px;height:6px;border-radius:50%;flex-shrink:0}
+.compare-phase{font-size:9px;color:var(--muted);width:60px}
+.compare-val{font-size:11px}
+
+/* CORE EXPAND */
+.core-why{font-size:11px;color:var(--sub);line-height:1.7;margin-bottom:14px}
+.core-bars{display:grid;grid-template-columns:1fr 1fr;gap:8px 20px}
+.core-bar-row{margin-bottom:2px}
+.core-bar-top{display:flex;justify-content:space-between;margin-bottom:3px}
+.core-bar-label{font-size:10px;color:var(--sub)}
+.core-bar-val{font-size:10px;font-weight:700}
+
+@media(max-width:400px){
+  .stats-grid{grid-template-columns:repeat(3,1fr)}
+  .hero-title{font-size:36px}
+  .vol-grid{grid-template-columns:1fr}
+  .proto-grid{grid-template-columns:1fr}
+  .rules-grid{grid-template-columns:1fr}
+  .compare-grid{grid-template-columns:1fr}
+}
+</style>
+</head>
+<body>
+
+<!-- HERO -->
+<div class="hero">
+  <div class="chips">
+    <span class="chip" style="background:#1B4FE414;border:1px solid #1B4FE430;color:#1B4FE4">2026 Athlete Profile</span>
+    <span class="chip" style="background:#D94F0A14;border:1px solid #D94F0A30;color:#D94F0A">Season Incoming</span>
+    <span class="chip" style="background:#0A8A6814;border:1px solid #0A8A6830;color:#0A8A68">Full Core Program</span>
+  </div>
+  <div class="hero-title">RIGHT WINGER ⚽</div>
+  <div class="hero-sub">Forward · Organized League · Right Foot</div>
+  <div class="stats-grid">
+    <div class="stat-box"><div class="stat-val">5'7"</div><div class="stat-label">Height</div></div>
+    <div class="stat-box"><div class="stat-val">150lb</div><div class="stat-label">Weight</div></div>
+    <div class="stat-box"><div class="stat-val" style="color:var(--blue)">+20lb</div><div class="stat-label">Goal</div></div>
+    <div class="stat-box"><div class="stat-val" style="color:var(--orange)">PPL 6x</div><div class="stat-label">Split</div></div>
+    <div class="stat-box"><div class="stat-val" style="color:var(--teal)">1x/Wk</div><div class="stat-label">Game</div></div>
+    <div class="stat-box"><div class="stat-val" style="color:var(--violet)">FWD</div><div class="stat-label">Position</div></div>
+  </div>
+</div>
+
+<!-- TABS -->
+<div class="tabs">
+  <button class="tab-btn active" onclick="showTab('profile',this)">Profile</button>
+  <button class="tab-btn" onclick="showTab('phases',this)">Phases</button>
+  <button class="tab-btn" onclick="showTab('program',this)">Program</button>
+  <button class="tab-btn" onclick="showTab('core',this)">Core</button>
+  <button class="tab-btn" onclick="showTab('soccer',this)">Soccer</button>
+</div>
+
+<!-- PROFILE TAB -->
+<div id="tab-profile" class="content">
+
+  <div class="banner" style="background:#1B4FE408;border:1px solid #1B4FE428;border-left:3px solid #1B4FE4;margin-bottom:12px">
+    <span class="banner-icon">📈</span>
+    <div><div class="banner-title" style="color:#1B4FE4">THE ONE RULE — PROGRESSIVE OVERLOAD</div>
+    <div class="banner-body">Every session: add weight, add reps, or add a set. Log in Hevy. If none of the three happened — you maintained, not grew.</div></div>
+  </div>
+
+  <div class="banner" style="background:#0A8A6808;border:1px solid #0A8A6828;border-left:3px solid #0A8A68;margin-bottom:12px">
+    <span class="banner-icon">🎯</span>
+    <div><div class="banner-title" style="color:#0A8A68">CORE PROGRAM — FULLY COVERED</div>
+    <div class="banner-body">5 exercises across 5 dimensions — anti-extension, stability, weighted flexion, rotation, and lower abs. Three need zero equipment.</div></div>
+  </div>
+
+  <div class="card">
+    <div class="card-head">WEEKLY SETS PER MUSCLE GROUP</div>
+    <div class="vol-grid" id="vol-grid"></div>
+  </div>
+
+  <div class="card">
+    <div class="card-head">NON-NEGOTIABLES 🔒</div>
+    <div class="nonneg-grid">
+      <div class="nonneg-card"><span class="nonneg-icon">🍗</span><div class="nonneg-label">Protein</div><div class="nonneg-val">150g+ daily</div></div>
+      <div class="nonneg-card"><span class="nonneg-icon">🔥</span><div class="nonneg-label">Calories</div><div class="nonneg-val">2,800–3,200</div></div>
+      <div class="nonneg-card"><span class="nonneg-icon">😴</span><div class="nonneg-label">Sleep</div><div class="nonneg-val">8+ hours</div></div>
+      <div class="nonneg-card"><span class="nonneg-icon">📊</span><div class="nonneg-label">Track</div><div class="nonneg-val">Log in Hevy</div></div>
+      <div class="nonneg-card"><span class="nonneg-icon">🍚</span><div class="nonneg-label">Carbs</div><div class="nonneg-val">Embrace them</div></div>
+      <div class="nonneg-card"><span class="nonneg-icon">♻️</span><div class="nonneg-label">Deload</div><div class="nonneg-val">Every 6–8 wks</div></div>
+    </div>
+  </div>
+
+  <div class="banner" style="background:#D94F0A08;border:1px solid #D94F0A28;border-left:3px solid #D94F0A">
+    <span class="banner-icon">💡</span>
+    <div><div class="banner-title" style="color:#D94F0A">REP RANGE SYSTEM</div>
+    <div class="banner-body">3–8 reps = Strength (compounds). 8–12 reps = Hypertrophy (size). 12–20 reps = Isolation (detail and pump). Leave 1–2 reps in the tank every set — never grind to failure on compounds.</div></div>
+  </div>
+
+</div>
+
+<!-- PHASES TAB -->
+<div id="tab-phases" class="content" style="display:none">
+  <div class="phase-btns">
+    <button class="phase-btn active" id="pbtn-pre" onclick="showPhase('pre')" style="border-color:#D94F0A;background:#D94F0A0D">
+      <span class="phase-icon">🔥</span><span class="phase-name" style="color:#D94F0A">Pre-Season</span>
+    </button>
+    <button class="phase-btn" id="pbtn-in" onclick="showPhase('in')">
+      <span class="phase-icon">⚽</span><span class="phase-name" style="color:var(--muted)">In-Season</span>
+    </button>
+    <button class="phase-btn" id="pbtn-post" onclick="showPhase('post')">
+      <span class="phase-icon">🌙</span><span class="phase-name" style="color:var(--muted)">Post-Season</span>
+    </button>
+  </div>
+  <div id="phase-content"></div>
+  <div class="compare-grid">
+    <div class="compare-card"><div class="compare-head">Gym Days / Week</div>
+      <div class="compare-row"><span class="compare-dot" style="background:#D94F0A"></span><span class="compare-phase">Pre-Season</span><span class="compare-val" id="cv-pre-gym">6 days</span></div>
+      <div class="compare-row"><span class="compare-dot" style="background:#1B4FE4"></span><span class="compare-phase">In-Season</span><span class="compare-val" id="cv-in-gym">4 days</span></div>
+      <div class="compare-row"><span class="compare-dot" style="background:#6D28D9"></span><span class="compare-phase">Post-Season</span><span class="compare-val" id="cv-post-gym">6 days</span></div>
+    </div>
+    <div class="compare-card"><div class="compare-head">HIIT</div>
+      <div class="compare-row"><span class="compare-dot" style="background:#D94F0A"></span><span class="compare-phase">Pre-Season</span><span class="compare-val">Tue only</span></div>
+      <div class="compare-row"><span class="compare-dot" style="background:#1B4FE4"></span><span class="compare-phase">In-Season</span><span class="compare-val">Tue only</span></div>
+      <div class="compare-row"><span class="compare-dot" style="background:#6D28D9"></span><span class="compare-phase">Post-Season</span><span class="compare-val">Tue only</span></div>
+    </div>
+    <div class="compare-card"><div class="compare-head">Zone 2</div>
+      <div class="compare-row"><span class="compare-dot" style="background:#D94F0A"></span><span class="compare-phase">Pre-Season</span><span class="compare-val">Thu only</span></div>
+      <div class="compare-row"><span class="compare-dot" style="background:#1B4FE4"></span><span class="compare-phase">In-Season</span><span class="compare-val">Game covers it</span></div>
+      <div class="compare-row"><span class="compare-dot" style="background:#6D28D9"></span><span class="compare-phase">Post-Season</span><span class="compare-val">Thu only</span></div>
+    </div>
+  </div>
+</div>
+
+<!-- PROGRAM TAB -->
+<div id="tab-program" class="content" style="display:none">
+  <div class="banner" style="background:#1B4FE408;border:1px solid #1B4FE428;border-left:3px solid #1B4FE4;margin-bottom:14px">
+    <span class="banner-icon">📋</span>
+    <div><div class="banner-title" style="color:#1B4FE4">EXERCISE ORDER RULE</div>
+    <div class="banner-body">Heavy barbell compounds → Lighter barbell compounds → Machine compounds → Cable or dumbbell isolation → Core always last.</div></div>
+  </div>
+  <div id="ppl-list"></div>
+</div>
+
+<!-- CORE TAB -->
+<div id="tab-core" class="content" style="display:none">
+  <div class="banner" style="background:#0A8A6808;border:1px solid #0A8A6828;border-left:3px solid #0A8A68;margin-bottom:14px">
+    <span class="banner-icon">🎯</span>
+    <div><div class="banner-title" style="color:#0A8A68">5 EXERCISES · 5 DIMENSIONS</div>
+    <div class="banner-body">Covers every part — rectus abdominis, obliques, transverse abdominis, and hip flexors. Tap any exercise for full breakdown.</div></div>
+  </div>
+  <div class="card" style="overflow-x:auto;margin-bottom:13px">
+    <div class="card-head">MUSCLE ACTIVATION MAP</div>
+    <table class="core-table">
+      <thead><tr>
+        <th style="text-align:left">Exercise</th>
+        <th>Six-Pack</th><th>Obliques</th><th>Deep Core</th><th>Hip Flexors</th>
+      </tr></thead>
+      <tbody id="core-table-body"></tbody>
+    </table>
+  </div>
+  <div id="core-expand-list"></div>
+  <div class="banner" style="background:#D94F0A08;border:1px solid #D94F0A28;border-left:3px solid #D94F0A;margin-top:4px">
+    <span class="banner-icon">⚠️</span>
+    <div><div class="banner-title" style="color:#D94F0A">PROGRESSIVE OVERLOAD ON CORE TOO</div>
+    <div class="banner-body">Cable Crunch and Woodchop must get heavier over time. Ab Wheel progresses by slowing tempo. Dead Bug with resistance band. Hanging Leg Raise from knees → straight legs → ankle weights.</div></div>
+  </div>
+</div>
+
+<!-- SOCCER TAB -->
+<div id="tab-soccer" class="content" style="display:none">
+  <div class="card" style="margin-bottom:13px">
+    <div style="margin-bottom:16px">
+      <span class="chip" style="background:#1B4FE414;border:1px solid #1B4FE430;color:#1B4FE4;margin-bottom:8px;display:inline-block">Right Winger · Forward</span>
+      <div class="bc" style="font-size:22px;margin-top:6px">⚽ WINGER PERFORMANCE PLAN</div>
+      <div style="font-size:11px;color:var(--sub);margin-top:3px">Fix stamina · Build explosiveness · Dominate 1v1</div>
+    </div>
+    <div style="font-size:9px;color:var(--muted);text-transform:uppercase;letter-spacing:.12em;margin-bottom:12px">Skill Baselines — Self Assessed — Update Monthly</div>
+    <div id="skills-list"></div>
+  </div>
+
+  <div class="card" style="margin-bottom:13px">
+    <div class="card-head">🏃 AEROBIC CONDITIONING PLAN</div>
+    <div class="zone-grid" id="zone-grid"></div>
+    <div class="banner" style="background:#0A7EA408;border:1px solid #0A7EA428;border-left:3px solid #0A7EA4;margin-bottom:0">
+      <span class="banner-icon">💡</span>
+      <div><div class="banner-title" style="color:#0A7EA4">WHY ZONE 2 FIXES GETTING GASSED</div>
+      <div class="banner-body">HIIT trains your sprint power. Zone 2 builds the engine that recovers between sprints. 25 min easy jog Thursday grows your mitochondria — more mitochondria = recover faster = still running hard in the 85th minute.</div></div>
+    </div>
+  </div>
+
+  <div class="proto-grid" id="soccer-protocols"></div>
+
+  <div class="banner" style="background:#0A8A6808;border:1px solid #0A8A6828;border-left:3px solid #0A8A68;margin-bottom:12px">
+    <span class="banner-icon">💪</span>
+    <div><div class="banner-title" style="color:#0A8A68">HOW CORE TRANSFERS TO THE PITCH</div>
+    <div class="banner-body">Dead Bug mimics the sprinting pattern. Cable Woodchop mirrors the rotational sequence of striking a ball. Ab Wheel builds trunk rigidity for 1v1s. Hanging Leg Raise powers your knee drive in sprints and shots.</div></div>
+  </div>
+
+  <div class="banner" style="background:#D94F0A08;border:1px solid #D94F0A28;border-left:3px solid #D94F0A">
+    <span class="banner-icon">⚠️</span>
+    <div><div class="banner-title" style="color:#D94F0A">HONEST TRUTH AT 150LB PLAYING FORWARD</div>
+    <div class="banner-body">Speed is your equalizer. A bigger defender cannot catch what he cannot touch. The gym makes you harder to push off the ball. HIIT makes you explosive. Zone 2 keeps you running hard in the 80th minute.</div></div>
+  </div>
+</div>
+
+<script>
+// ── DATA ──────────────────────────────────────────────────────────
+const VOLUME=[
+  {m:"Back / Lats",w:18,t:20},{m:"Chest",w:16,t:18},{m:"Shoulders",w:14,t:16},
+  {m:"Rear Delts",w:12,t:14},{m:"Triceps",w:13,t:14},{m:"Biceps",w:12,t:14},
+  {m:"Quads",w:16,t:18},{m:"Hamstrings",w:14,t:16},{m:"Calves",w:14,t:16},
+  {m:"Core / Abs",w:15,t:16,updated:true}
+];
+
+const PHASES={
+  pre:{
+    color:"#D94F0A",label:"Pre-Season",tagline:"Build. Grow. Prepare.",
+    focus:"Maximum muscle building and conditioning foundation",
+    schedule:[
+      {day:"MON",gym:"Pull 1",add:"Plyometrics before lifting"},
+      {day:"TUE",gym:"Push 1",add:"HIIT after lifting — 20 min"},
+      {day:"WED",gym:"Legs 1",add:""},
+      {day:"THU",gym:"Pull 2",add:"Zone 2 Jog — 25 min after"},
+      {day:"FRI",gym:"Push 2",add:""},
+      {day:"SAT",gym:"Legs 2",add:""},
+      {day:"SUN",gym:"REST",add:"Full rest"}
+    ],
+    bullets:[
+      "Full 6-day PPL at maximum volume",
+      "HIIT once per week — Tuesday after Push 1",
+      "Zone 2 jog once per week — Thursday after Pull 2",
+      "Plyometrics Monday before lifting only",
+      "Legs days kept completely clean — lift and go home",
+      "Caloric surplus — 2,800 to 3,200 cal daily"
+    ]
+  },
+  in:{
+    color:"#1B4FE4",label:"In-Season",tagline:"Maintain. Perform. Dominate.",
+    focus:"Maintain all gains — perform at peak on game day",
+    schedule:[
+      {day:"MON",gym:"Full Body A",add:"Heavy compounds"},
+      {day:"TUE",gym:"HIIT",add:"Sprint intervals — 20 min"},
+      {day:"WED",gym:"Full Body B",add:"Power focus"},
+      {day:"THU",gym:"Recovery",add:"Stretch, skills, light walk"},
+      {day:"FRI",gym:"Plyos + Agility",add:"20 min max"},
+      {day:"SAT",gym:"Pre-Game",add:"Light movement only"},
+      {day:"SUN",gym:"GAME DAY",add:"Your full aerobic session"}
+    ],
+    bullets:[
+      "Drop to 4 gym days — full body A and B",
+      "Max 2 to 3 sets, max 8 reps to limit soreness",
+      "Sunday game is your aerobic session — no Zone 2 needed",
+      "Thursday is pure recovery — legs need it before Sunday",
+      "HIIT once Tuesday — top-end speed maintenance",
+      "Sleep 8 hours minimum — recovery is king"
+    ],
+    inSeasonWorkouts:[
+      {name:"FULL BODY A",day:"Monday",color:"#1B4FE4",tag:"Heavy",
+       focus:"Heavy strength · Short and intense · Max 45 min",
+       exercises:[
+         {name:"Squat (Barbell)",sets:3,reps:"4–5",rest:"3 min",note:"Strength anchor"},
+         {name:"Bench Press (Barbell)",sets:3,reps:"5",rest:"3 min",note:"Strength anchor"},
+         {name:"Romanian Deadlift",sets:3,reps:"6",rest:"2 min",note:"Stay low rep — hamstring health"},
+         {name:"Bent Over Row (Barbell)",sets:3,reps:"6",rest:"2 min",note:""},
+         {name:"Lateral Raise (Dumbbell)",sets:2,reps:"15",rest:"60 sec",note:"Maintenance volume"},
+         {name:"Dead Bug",sets:2,reps:"8 each",rest:"60 sec",note:"Core — zero equipment",core:true}
+       ]},
+      {name:"FULL BODY B",day:"Wednesday",color:"#0A8A68",tag:"Power",
+       focus:"Power and explosiveness · Athletic focus · Max 45 min",
+       exercises:[
+         {name:"Deadlift (Barbell)",sets:3,reps:"3–4",rest:"3 min",note:"Explosive intent"},
+         {name:"Bulgarian Split Squat",sets:3,reps:"6 each",rest:"2 min",note:"Unilateral power for sprinting"},
+         {name:"Close Grip Bench Press",sets:3,reps:"6",rest:"2 min",note:""},
+         {name:"Chin Up (Assisted)",sets:3,reps:"6–8",rest:"2 min",note:""},
+         {name:"Face Pull (Cable)",sets:2,reps:"15",rest:"60 sec",note:"Shoulder health — always keep"},
+         {name:"Hanging Leg Raise",sets:2,reps:"10",rest:"60 sec",note:"Core — bar only",core:true}
+       ]}
+    ],
+    weekCards:[
+      {day:"MON",session:"Full Body A",color:"#1B4FE4",detail:"Heavy · 45 min"},
+      {day:"TUE",session:"HIIT",color:"#D94F0A",detail:"30s sprint intervals"},
+      {day:"WED",session:"Full Body B",color:"#0A8A68",detail:"Power · 45 min"},
+      {day:"THU",session:"Recovery",color:"#9B9589",detail:"Stretch + skills"},
+      {day:"FRI",session:"Plyos+Agility",color:"#6D28D9",detail:"20 min max"},
+      {day:"SAT",session:"Pre-Game",color:"#9B9589",detail:"Light movement"},
+      {day:"SUN",session:"GAME DAY",color:"#1B4FE4",detail:"Your aerobics ⚽"}
+    ],
+    rules:[
+      {color:"#1B4FE4",title:"Never lift legs heavy within 48h of game day",body:"Full Body B is Wednesday, game is Sunday — 72+ hours for your legs."},
+      {color:"#D94F0A",title:"Keep reps low — 3 to 6 on compounds",body:"Low reps maintain strength without causing soreness that ruins game performance."},
+      {color:"#0A8A68",title:"The game is your hardest session of the week",body:"Don't try to out-train it. Manage fatigue and show up fresh on Sunday."},
+      {color:"#6D28D9",title:"2 sessions is enough to keep all your gains",body:"Research confirms 2 weekly sessions can still modestly improve muscle. You're doing 2 — perfect."}
+    ]
+  },
+  post:{
+    color:"#6D28D9",label:"Post-Season",tagline:"Recover. Reset. Grow Again.",
+    focus:"Resume full PPL — biggest size building window of the year",
+    schedule:[
+      {day:"MON",gym:"Pull 1",add:"Plyometrics before lifting"},
+      {day:"TUE",gym:"Push 1",add:"HIIT after lifting — 20 min"},
+      {day:"WED",gym:"Legs 1",add:""},
+      {day:"THU",gym:"Pull 2",add:"Zone 2 Jog — 25 min after"},
+      {day:"FRI",gym:"Push 2",add:""},
+      {day:"SAT",gym:"Legs 2",add:""},
+      {day:"SUN",gym:"REST",add:"Full rest — non-negotiable"}
+    ],
+    bullets:[
+      "Take 1 to 2 weeks full rest after season ends",
+      "Resume full 6-day PPL with a recovered body",
+      "Chase strength PRs on every compound lift",
+      "HIIT Tuesday, Zone 2 Thursday — same as pre-season",
+      "Deload every 6 to 8 weeks without exception",
+      "Biggest muscle-building window of the year"
+    ]
+  }
+};
+
+const PPL=[
+  {name:"PULL 1",color:"#1B4FE4",focus:"Vertical pull · Back width · Anti-extension core",exercises:[
+    {name:"Deadlift (Barbell)",sets:4,reps:"5",note:"Strength anchor — 3 to 4 min rest"},
+    {name:"Bent Over Row (Barbell)",sets:3,reps:"8–10",note:"Barbell compound before cable work"},
+    {name:"Lat Pulldown (Cable)",sets:3,reps:"8–10",note:""},
+    {name:"Iso-Lateral Low Row",sets:3,reps:"10–12",note:""},
+    {name:"Face Pull (Cable)",sets:3,reps:"15–20",note:"Rear delts — shoulder health"},
+    {name:"Bicep Curl (Dumbbell)",sets:3,reps:"10–12",note:""},
+    {name:"Cross Body Hammer Curl",sets:3,reps:"12–15",note:""},
+    {name:"Ab Wheel Rollout",sets:3,reps:"8–10",note:"Core — ab wheel only",core:true,coreType:"Anti-Extension"}
+  ]},
+  {name:"PUSH 1",color:"#D94F0A",focus:"Chest strength · Pressing power · Core stability",exercises:[
+    {name:"Bench Press (Barbell)",sets:4,reps:"5–6",note:"Strength anchor — 3 min rest"},
+    {name:"Incline Bench Press (Barbell)",sets:3,reps:"8–10",note:"Upper chest"},
+    {name:"Overhead Press (Barbell)",sets:3,reps:"6–8",note:""},
+    {name:"Seated Chest Fly (Cable)",sets:3,reps:"12–15",note:""},
+    {name:"Lateral Raise (Dumbbell)",sets:4,reps:"15–20",note:"Side delt width"},
+    {name:"Skullcrusher (Barbell)",sets:3,reps:"10–12",note:"Long head tricep"},
+    {name:"Tricep Rope Pushdown",sets:3,reps:"12–15",note:""},
+    {name:"Dead Bug",sets:3,reps:"8–10 each",note:"Core — zero equipment",core:true,coreType:"Stability"}
+  ]},
+  {name:"LEGS 1",color:"#0A8A68",focus:"Quad led · Glute power · Weighted core flexion",exercises:[
+    {name:"Squat (Barbell)",sets:4,reps:"5–6",note:"Strength anchor — 3 to 4 min rest"},
+    {name:"Leg Press (Machine)",sets:3,reps:"10–12",note:""},
+    {name:"Bulgarian Split Squat",sets:3,reps:"8–10",note:"Demanding — do before hip thrust"},
+    {name:"Hip Thrust (Barbell)",sets:3,reps:"10–12",note:"Glute priority"},
+    {name:"Lunge (Dumbbell)",sets:3,reps:"10–12",note:""},
+    {name:"Standing Calf Raise",sets:4,reps:"12–15",note:""},
+    {name:"Cable Crunch",sets:3,reps:"12–15",note:"Core — add weight every session",core:true,coreType:"Weighted Flexion"}
+  ]},
+  {name:"PULL 2",color:"#6D28D9",focus:"Horizontal pull · Back thickness · Rotational core",exercises:[
+    {name:"Romanian Deadlift (Barbell)",sets:4,reps:"8–10",note:"Hamstring priority — 2 to 3 min rest"},
+    {name:"Chin Up (Assisted)",sets:3,reps:"8–10",note:"Bodyweight compound before cable row"},
+    {name:"Seated Cable Row (V-Grip)",sets:3,reps:"10–12",note:""},
+    {name:"Straight Arm Lat Pulldown",sets:3,reps:"12–15",note:""},
+    {name:"Face Pull (Cable)",sets:3,reps:"15–20",note:"Rear delts — second hit"},
+    {name:"Bicep Curl (Barbell)",sets:3,reps:"10–12",note:""},
+    {name:"Hammer Curl (Cable)",sets:3,reps:"12–15",note:""},
+    {name:"Cable Woodchop",sets:3,reps:"12 each",note:"Core — shot and cross power",core:true,coreType:"Rotation"}
+  ]},
+  {name:"PUSH 2",color:"#C96A10",focus:"Shoulder led · Chest isolation · Tricep detail",exercises:[
+    {name:"Close Grip Bench Press",sets:4,reps:"6–8",note:"Tricep anchor — 2 to 3 min rest"},
+    {name:"Iso-Lateral Chest Press",sets:3,reps:"10–12",note:""},
+    {name:"Shoulder Press (Dumbbell)",sets:3,reps:"10–12",note:""},
+    {name:"Chest Fly (Dumbbell)",sets:3,reps:"12–15",note:""},
+    {name:"Rear Delt Fly (Cable)",sets:3,reps:"15–20",note:"Posture and shoulder health"},
+    {name:"Lateral Raise (Dumbbell)",sets:3,reps:"15–20",note:""},
+    {name:"Tricep Rope Pushdown",sets:3,reps:"12–15",note:""}
+  ]},
+  {name:"LEGS 2",color:"#0A7EA4",focus:"Hamstring led · Calf detail · Lower abs",exercises:[
+    {name:"Squat — Pause Reps",sets:3,reps:"8",note:"Time under tension — lighter than Legs 1"},
+    {name:"Romanian Deadlift (Dumbbell)",sets:3,reps:"10–12",note:""},
+    {name:"Dumbbell Step Up",sets:3,reps:"10–12",note:"Compound before isolation"},
+    {name:"Seated Leg Curl (Machine)",sets:4,reps:"10–12",note:"Hamstring isolation — slow eccentric"},
+    {name:"Leg Extension (Machine)",sets:3,reps:"12–15",note:""},
+    {name:"Seated Calf Raise",sets:4,reps:"15–20",note:"Soleus — pairs with standing raise"},
+    {name:"Hanging Leg Raise",sets:3,reps:"10–15",note:"Core — lower abs + hip flexors",core:true,coreType:"Lower Abs"}
+  ]}
+];
+
+const CORE_MAP=[
+  {day:"Pull 1",name:"Ab Wheel Rollout",equipment:"Ab wheel (~$15)",color:"#1B4FE4",type:"Anti-Extension",
+   hits:{rectus:90,obliques:75,transverse:95,hipflex:10},
+   why:"Trains abs in a fully stretched position — highest hypertrophy stimulus. Best anti-extension exercise you can do."},
+  {day:"Push 1",name:"Dead Bug",equipment:"Zero — floor only",color:"#D94F0A",type:"Stability",
+   hits:{rectus:65,obliques:60,transverse:95,hipflex:70},
+   why:"Mimics the running and sprinting pattern. Teaches your spine to stay neutral under load — transfers directly to squats and soccer."},
+  {day:"Legs 1",name:"Cable Crunch",equipment:"Cable machine",color:"#0A8A68",type:"Weighted Flexion",
+   hits:{rectus:95,obliques:55,transverse:40,hipflex:20},
+   why:"Only ab exercise with constant tension through full range. Add weight every session — this is how abs actually grow."},
+  {day:"Pull 2",name:"Cable Woodchop",equipment:"Cable machine",color:"#6D28D9",type:"Rotation",
+   hits:{rectus:60,obliques:95,transverse:70,hipflex:30},
+   why:"Resistance applied diagonally along oblique fiber direction. Directly transfers to shot power and crossing velocity."},
+  {day:"Legs 2",name:"Hanging Leg Raise",equipment:"Pull-up bar",color:"#0A7EA4",type:"Lower Abs",
+   hits:{rectus:85,obliques:65,transverse:60,hipflex:90},
+   why:"The only exercise ranked highly in ALL 4 major EMG studies. Best lower abs exercise. Progress: knee raise → straight leg → weighted."}
+];
+
+const SKILLS=[
+  {label:"Stamina — 90 min endurance",pct:40,color:"#C42020"},
+  {label:"Explosive First Step",pct:55,color:"#D94F0A"},
+  {label:"1v1 Win Rate",pct:70,color:"#0A8A68"},
+  {label:"Left Foot Ability",pct:30,color:"#C42020"},
+  {label:"Crossing Accuracy",pct:60,color:"#0A8A68"},
+  {label:"Sprint Recovery",pct:35,color:"#D94F0A"}
+];
+
+const ZONES=[
+  {zone:"Zone 1",intensity:"Very Easy",feel:"Could sing",color:"#C4BFB5",use:"Warmup and cooldown only"},
+  {zone:"Zone 2",intensity:"Easy-Moderate",feel:"Full conversation",color:"#0A7EA4",use:"YOUR BASE — Thu after Pull 2"},
+  {zone:"Zone 3+",intensity:"Hard to Max",feel:"Struggling to talk",color:"#D94F0A",use:"HIIT — Tue after Push 1"}
+];
+
+const SOCCER_PROTOCOLS=[
+  {title:"🏃 HIIT Protocol",color:"#D94F0A",items:["30s sprint → 90s jog × 6 to 8 rounds","OR shuttle runs — 4 sets of 6 reps","Tuesday only — after Push 1","Not before a game, not on leg days"]},
+  {title:"⚡ Plyometrics",color:"#1B4FE4",items:["Box Jump — 3×6 to 8","Lateral Bound — 3×6 each side","Depth Jump — 3×5 (advanced)","Single Leg Hop — 3×8 each"]},
+  {title:"🎯 Agility Drills",color:"#0A8A68",items:["Agility Ladder — 5 min","T-Drill — 4×30s","Cone Weave Sprint — 4 reps","5-10-5 Shuttle — 6 reps"]},
+  {title:"⚽ Ball Skills",color:"#6D28D9",items:["Dribble at 80% through cones, sprint finish","1v1 finishing repetitions","Crossing on the run — both feet","Left foot only: 15 min daily"]}
+];
+
+// ── RENDER FUNCTIONS ──────────────────────────────────────────────
+
+function renderVolume(){
+  const g=document.getElementById("vol-grid");
+  g.innerHTML=VOLUME.map(v=>{
+    const pct=Math.round((v.w/v.t)*100);
+    const ok=pct>=85;
+    const color=ok?"#0A8A68":"#D94F0A";
+    return `<div class="vol-row">
+      <div class="vol-top">
+        <span class="vol-label">${v.m}${v.updated?' <span style="font-size:9px;color:#0A8A68;font-weight:700;background:#0A8A6814;padding:1px 6px;border-radius:99px;border:1px solid #0A8A6830">Updated</span>':''}</span>
+        <span class="vol-val" style="color:${color}">${v.w}/${v.t}</span>
+      </div>
+      <div class="bar-bg"><div class="bar-fill" style="width:${pct}%;background:${color}"></div></div>
+    </div>`;
+  }).join("");
+}
+
+let currentPhase="pre";
+function showPhase(key){
+  currentPhase=key;
+  ["pre","in","post"].forEach(k=>{
+    const btn=document.getElementById("pbtn-"+k);
+    const p=PHASES[k];
+    btn.style.borderColor=k===key?p.color:"var(--border)";
+    btn.style.background=k===key?p.color+"0D":"var(--card)";
+    btn.querySelector(".phase-name").style.color=k===key?p.color:"var(--muted)";
+    btn.className=k===key?"phase-btn active":"phase-btn";
+  });
+  renderPhase(key);
+}
+
+function renderPhase(key){
+  const p=PHASES[key];
+  let html=`
+  <div class="card" style="border-top:3px solid ${p.color};margin-bottom:13px">
+    <div style="margin-bottom:12px">
+      <div class="bc" style="font-size:26px;color:${p.color}">${p.label.toUpperCase()}</div>
+      <div style="font-size:12px;color:var(--muted);font-style:italic;margin-top:3px">${p.tagline}</div>
+      <div style="font-size:11px;color:var(--sub);background:var(--raised);border:1px solid var(--border);border-radius:8px;padding:7px 12px;display:inline-block;margin-top:10px">${p.focus}</div>
+    </div>
+    <div style="display:grid;grid-template-columns:1fr 1fr;gap:20px">
+      <div>
+        <div style="font-size:9px;color:var(--muted);text-transform:uppercase;letter-spacing:.12em;margin-bottom:12px">Training Approach</div>
+        ${p.bullets.map(b=>`<div style="display:flex;gap:8px;margin-bottom:7px;align-items:flex-start">
+          <div style="width:5px;height:5px;border-radius:50%;background:${p.color};margin-top:4px;flex-shrink:0"></div>
+          <span style="font-size:11px;color:var(--sub);line-height:1.55">${b}</span>
+        </div>`).join("")}
+      </div>
+      <div>
+        <div style="font-size:9px;color:var(--muted);text-transform:uppercase;letter-spacing:.12em;margin-bottom:12px">Weekly Schedule</div>
+        <div class="sched-list">
+          ${p.schedule.map(s=>`<div class="sched-row">
+            <div class="sched-day">${s.day}</div>
+            <div>
+              <div class="sched-gym" style="color:${s.gym==="REST"||s.gym==="GAME DAY"?p.color:"var(--text)"};font-weight:${s.gym==="GAME DAY"?700:400}">${s.gym}</div>
+              ${s.add?`<div class="sched-add">${s.add}</div>`:""}
+            </div>
+          </div>`).join("")}
+        </div>
+      </div>
+    </div>
+  </div>`;
+
+  if(key==="in" && p.inSeasonWorkouts){
+    const wc=p.weekCards.map(w=>`
+      <div class="week-card" style="background:${w.color}10;border-color:${w.color};border-top-color:${w.color}">
+        <div class="week-day">${w.day}</div>
+        <div class="week-session" style="color:${w.color}">${w.session}</div>
+        <div class="week-detail">${w.detail}</div>
+      </div>`).join("");
+    html+=`<div class="week-grid">${wc}</div>`;
+
+    p.inSeasonWorkouts.forEach(w=>{
+      const wid="workout-"+w.name.replace(/\s/g,"-");
+      html+=`<div class="expand-card" style="border-top:3px solid ${w.color};margin-bottom:12px">
+        <button class="expand-btn" onclick="toggleExpand('${wid}')">
+          <span class="expand-dot" style="background:${w.color}"></span>
+          <div>
+            <div style="display:flex;align-items:center;gap:8px">
+              <span class="expand-name">${w.name}</span>
+              <span style="font-size:9px;font-weight:700;color:${w.color};background:${w.color}14;border:1px solid ${w.color}30;padding:2px 8px;border-radius:99px;text-transform:uppercase">${w.tag}</span>
+              <span style="font-size:10px;color:var(--muted)">${w.day}</span>
+            </div>
+            <div class="expand-focus">${w.focus}</div>
+          </div>
+          <span class="expand-arrow" id="arr-${wid}">▼</span>
+        </button>
+        <div class="expand-body" id="${wid}">
+          ${w.exercises.map((ex,i)=>`
+          <div class="ex-row" style="background:${ex.core?"#0A8A6807":"none"}">
+            <div class="ex-num" style="background:${ex.core?"#0A8A6818":w.color+"12"};color:${ex.core?"#0A8A68":w.color}">${i+1}</div>
+            <div style="flex:1">
+              <div style="display:flex;align-items:center;gap:7px;flex-wrap:wrap">
+                <span class="ex-name">${ex.name}</span>
+                ${ex.core?`<span style="font-size:9px;font-weight:700;color:#0A8A68;background:#0A8A6814;border:1px solid #0A8A6830;padding:1px 7px;border-radius:99px">Core</span>`:""}
+              </div>
+              ${ex.note?`<div class="ex-note">${ex.note}</div>`:""}
+            </div>
+            <div style="display:flex;gap:12px;flex-shrink:0;align-items:center">
+              <div class="ex-sets"><div class="ex-sets-val">${ex.sets}</div><div class="ex-sets-label">sets</div></div>
+              <div class="ex-reps"><div class="ex-reps-val" style="color:${w.color}">${ex.reps}</div><div class="ex-reps-label">reps</div></div>
+              <div style="text-align:center"><div style="font-size:10px;font-weight:600;color:var(--muted)">${ex.rest}</div><div style="font-size:8px;color:var(--dim);text-transform:uppercase">rest</div></div>
+            </div>
+          </div>`).join("")}
+        </div>
+      </div>`;
+    });
+
+    html+=`<div class="card" style="margin-bottom:13px">
+      <div class="card-head">IN-SEASON RULES</div>
+      <div class="rules-grid">
+        ${p.rules.map(r=>`<div class="rule-card" style="background:${r.color}08;border-color:${r.color}25;border-left-color:${r.color}">
+          <div class="rule-title" style="color:${r.color}">${r.title}</div>
+          <div class="rule-body">${r.body}</div>
+        </div>`).join("")}
+      </div>
+    </div>`;
+
+    html+=`<div style="display:grid;grid-template-columns:1fr 1fr;gap:11px;margin-bottom:13px">
+      <div class="card" style="padding:15px">
+        <div style="font-family:'Barlow Condensed',sans-serif;font-size:13px;font-weight:800;color:#D94F0A;margin-bottom:9px">TUE — HIIT</div>
+        ${["30s all-out sprint → 90s jog × 6 to 8 rounds","OR shuttle runs: 20m back and forth × 6 = 1 set","4 sets, rest 2 min · total 20 to 25 min"].map(i=>`<div class="proto-item"><div class="proto-dot" style="background:#D94F0A"></div><div class="proto-text">${i}</div></div>`).join("")}
+      </div>
+      <div class="card" style="padding:15px">
+        <div style="font-family:'Barlow Condensed',sans-serif;font-size:13px;font-weight:800;color:#6D28D9;margin-bottom:9px">FRI — PLYOS</div>
+        ${["Box Jumps — 3×5 · Lateral Bounds — 3×5 each","Agility Ladder — 3 min · T-Drill — 4 reps","20 min max — stay fresh for Saturday"].map(i=>`<div class="proto-item"><div class="proto-dot" style="background:#6D28D9"></div><div class="proto-text">${i}</div></div>`).join("")}
+      </div>
+    </div>`;
+  }
+
+  document.getElementById("phase-content").innerHTML=html;
+}
+
+function renderPPL(){
+  const list=document.getElementById("ppl-list");
+  list.innerHTML=PPL.map(day=>{
+    const id="day-"+day.name.replace(/\s/g,"-");
+    const exRows=day.exercises.map((ex,i)=>`
+      <div class="ex-row" style="background:${ex.core?"#0A8A6807":"none"}">
+        <div class="ex-num" style="background:${ex.core?"#0A8A6818":day.color+"12"};color:${ex.core?"#0A8A68":day.color}">${i+1}</div>
+        <div style="flex:1">
+          <div style="display:flex;align-items:center;gap:7px;flex-wrap:wrap">
+            <span class="ex-name">${ex.name}</span>
+            ${ex.core?`<span style="font-size:9px;font-weight:700;color:#0A8A68;background:#0A8A6814;border:1px solid #0A8A6830;padding:1px 7px;border-radius:99px">${ex.coreType}</span>`:""}
+          </div>
+          ${ex.note?`<div class="ex-note">${ex.note}</div>`:""}
+        </div>
+        <div class="ex-sets"><div class="ex-sets-val">${ex.sets}</div><div class="ex-sets-label">sets</div></div>
+        <div class="ex-reps"><div class="ex-reps-val" style="color:${day.color}">${ex.reps}</div><div class="ex-reps-label">reps</div></div>
+      </div>`).join("");
+    return `<div class="expand-card">
+      <button class="expand-btn" onclick="toggleExpand('${id}')" style="background:none">
+        <span class="expand-dot" style="background:${day.color}"></span>
+        <div>
+          <div class="expand-name">${day.name}</div>
+          <div class="expand-focus">${day.focus}</div>
+        </div>
+        <span style="font-size:10px;color:var(--dim);margin-right:6px">${day.exercises.length} ex</span>
+        <span class="expand-arrow" id="arr-${id}">▼</span>
+      </button>
+      <div class="expand-body" id="${id}">
+        <div class="ex-header">
+          <span class="ex-range"><span class="ex-range-line" style="background:${day.color}"></span>3–8 Strength</span>
+          <span class="ex-range"><span class="ex-range-line" style="background:${day.color}"></span>8–12 Hypertrophy</span>
+          <span class="ex-range"><span class="ex-range-line" style="background:${day.color}"></span>12–20 Isolation</span>
+        </div>
+        ${exRows}
+      </div>
+    </div>`;
+  }).join("");
+}
+
+function renderCore(){
+  const tbody=document.getElementById("core-table-body");
+  tbody.innerHTML=CORE_MAP.map(c=>`<tr>
+    <td><div class="core-ex-name">${c.name}</div><div class="core-ex-day" style="color:${c.color}">${c.day}</div></td>
+    ${[c.hits.rectus,c.hits.obliques,c.hits.transverse,c.hits.hipflex].map(v=>`<td>
+      <div class="core-pct" style="color:${v>=80?c.color:v>=50?"var(--sub)":"var(--dim)"}">${v}%</div>
+      <div class="mini-bar-bg"><div class="mini-bar-fill" style="width:${v}%;background:${v>=80?c.color:"var(--dim)"}"></div></div>
+    </td>`).join("")}
+  </tr>`).join("");
+
+  const list=document.getElementById("core-expand-list");
+  list.innerHTML=CORE_MAP.map(c=>{
+    const id="core-"+c.name.replace(/\s/g,"-");
+    return `<div class="expand-card">
+      <button class="expand-btn" onclick="toggleExpand('${id}')">
+        <span class="expand-dot" style="background:${c.color}"></span>
+        <div style="flex:1">
+          <div style="display:flex;align-items:center;gap:7px;flex-wrap:wrap">
+            <span class="expand-name" style="font-size:16px">${c.name}</span>
+            <span style="font-size:9px;font-weight:700;color:${c.color};background:${c.color}14;border:1px solid ${c.color}30;padding:1px 8px;border-radius:99px">${c.type}</span>
+            <span style="font-size:9px;color:var(--muted);background:var(--raised);border:1px solid var(--border);padding:1px 8px;border-radius:99px">${c.day}</span>
+          </div>
+          <div style="font-size:10px;color:var(--muted);margin-top:2px">🔧 ${c.equipment}</div>
+        </div>
+        <span class="expand-arrow" id="arr-${id}">▼</span>
+      </button>
+      <div class="expand-body" id="${id}">
+        <div style="padding:15px 18px">
+          <div class="core-why">${c.why}</div>
+          <div class="core-bars">
+            ${[["Six-Pack (Rectus)",c.hits.rectus],["Obliques",c.hits.obliques],["Deep Core (TVA)",c.hits.transverse],["Hip Flexors",c.hits.hipflex]].map(([label,val])=>`
+            <div class="core-bar-row">
+              <div class="core-bar-top">
+                <span class="core-bar-label">${label}</span>
+                <span class="core-bar-val" style="color:${val>=80?c.color:"var(--muted)"}">${val}%</span>
+              </div>
+              <div class="bar-bg"><div class="bar-fill" style="width:${val}%;background:${val>=80?c.color:"var(--muted)"}"></div></div>
+            </div>`).join("")}
+          </div>
+        </div>
+      </div>
+    </div>`;
+  }).join("");
+}
+
+function renderSoccer(){
+  document.getElementById("skills-list").innerHTML=SKILLS.map(s=>`
+    <div class="skill-row">
+      <span class="skill-label">${s.label}</span>
+      <div class="bar-bg" style="flex:1"><div class="bar-fill" style="width:${s.pct}%;background:${s.color}"></div></div>
+      <span class="skill-pct" style="color:${s.color}">${s.pct}%</span>
+    </div>`).join("");
+
+  document.getElementById("zone-grid").innerHTML=ZONES.map(z=>`
+    <div class="zone-card" style="background:${z.color}10;border-color:${z.color}20;border-top-color:${z.color}">
+      <div class="zone-name" style="color:${z.color}">${z.zone}</div>
+      <div class="zone-intensity">${z.intensity}</div>
+      <div class="zone-feel">Feel: ${z.feel}</div>
+      <div class="zone-use" style="color:${z.color}">${z.use}</div>
+    </div>`).join("");
+
+  document.getElementById("soccer-protocols").innerHTML=SOCCER_PROTOCOLS.map(p=>`
+    <div class="proto-card">
+      <div class="proto-title" style="color:${p.color}">${p.title}</div>
+      ${p.items.map(i=>`<div class="proto-item"><div class="proto-dot" style="background:${p.color}"></div><div class="proto-text">${i}</div></div>`).join("")}
+    </div>`).join("");
+}
+
+// ── TAB SWITCHING ─────────────────────────────────────────────────
+function showTab(name, btn){
+  document.querySelectorAll(".content").forEach(c=>c.style.display="none");
+  document.querySelectorAll(".tab-btn").forEach(b=>b.classList.remove("active"));
+  document.getElementById("tab-"+name).style.display="block";
+  if(btn) btn.classList.add("active");
+}
+
+// ── EXPAND TOGGLE ─────────────────────────────────────────────────
+function toggleExpand(id){
+  const body=document.getElementById(id);
+  const arr=document.getElementById("arr-"+id);
+  const isOpen=body.classList.contains("open");
+  body.classList.toggle("open",!isOpen);
+  if(arr) arr.textContent=isOpen?"▼":"▲";
+}
+
+// ── INIT ─────────────────────────────────────────────────────────
+renderVolume();
+showPhase("pre");
+renderPPL();
+renderCore();
+renderSoccer();
+
+// Service Worker
+if("serviceWorker" in navigator){
+  window.addEventListener("load",()=>{
+    navigator.serviceWorker.register("/my-training/sw.js")
+      .catch(()=>{});
+  });
+}
+</script>
+</body>
+</html>
