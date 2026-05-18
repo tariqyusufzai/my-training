@@ -1,0 +1,560 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8"/>
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover"/>
+<meta name="apple-mobile-web-app-capable" content="yes"/>
+<meta name="apple-mobile-web-app-status-bar-style" content="default"/>
+<meta name="apple-mobile-web-app-title" content="My Training"/>
+<meta name="theme-color" content="#10B981"/>
+<link rel="manifest" href="manifest.json"/>
+<link rel="apple-touch-icon" href="icons/apple-touch-icon.png"/>
+<link rel="icon" type="image/png" sizes="32x32" href="icons/favicon-32.png"/>
+<link rel="preconnect" href="https://fonts.googleapis.com"/>
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Barlow+Condensed:wght@700;800;900&family=Outfit:wght@400;500;600&display=swap"/>
+<title>My Training</title>
+<style>
+*{box-sizing:border-box;margin:0;padding:0;-webkit-tap-highlight-color:transparent}
+body{background:#F4F2EC;color:#161412;font-family:'Outfit',sans-serif;min-height:100vh;max-width:880px;margin:0 auto;padding-bottom:env(safe-area-inset-bottom)}
+.bc{font-family:'Barlow Condensed',sans-serif;font-weight:800;letter-spacing:.08em}
+.hero{background:#fff;border-bottom:1px solid #E4E1D8;padding:26px 20px 22px}
+.hero-chips{display:flex;gap:6px;flex-wrap:wrap;margin-bottom:10px}
+.chip{display:inline-block;padding:2px 9px;border-radius:99px;font-size:10px;font-weight:700;letter-spacing:.09em;text-transform:uppercase}
+.hero-title{font-family:'Barlow Condensed',sans-serif;font-size:38px;font-weight:900;line-height:1;letter-spacing:-.01em}
+.hero-sub{color:#5C5750;font-size:12px;margin-top:6px;line-height:1.6}
+.hero-cards{display:grid;grid-template-columns:repeat(4,1fr);gap:10px;margin-top:18px}
+.hero-card{border-radius:10px;padding:11px 10px;text-align:center}
+.hero-card-val{font-family:'Barlow Condensed',sans-serif;font-size:20px;font-weight:900}
+.hero-card-label{font-size:9px;color:#9B9589;text-transform:uppercase;letter-spacing:.1em;margin-top:1px}
+.tabs{display:flex;border-bottom:1px solid #E4E1D8;background:#fff;position:sticky;top:0;z-index:100}
+.tab-btn{flex:1;background:none;border:none;border-bottom:2px solid transparent;color:#9B9589;font-size:12px;font-weight:700;letter-spacing:.1em;text-transform:uppercase;padding:14px 10px;cursor:pointer;font-family:'Outfit',sans-serif}
+.tab-btn.active{border-bottom-color:#1B4FE4;color:#1B4FE4}
+.content{padding:20px 20px 80px;display:none}
+.content.active{display:block}
+.card{background:#fff;border:1px solid #E4E1D8;border-radius:14px;padding:20px 22px;margin-bottom:12px}
+.card-head{font-family:'Barlow Condensed',sans-serif;font-size:16px;font-weight:800;letter-spacing:.1em;margin-bottom:14px}
+.banner{border-radius:12px;padding:13px 16px;display:flex;align-items:flex-start;gap:12px;margin-bottom:12px}
+.banner-icon{font-size:19px;flex-shrink:0;margin-top:1px}
+.banner-title{font-family:'Barlow Condensed',sans-serif;font-size:13px;font-weight:800;letter-spacing:.1em;margin-bottom:3px}
+.banner-body{font-size:11px;color:#5C5750;line-height:1.65}
+.bar-bg{background:#E4E1D8;border-radius:99px;height:5px;flex:1}
+.bar-fill{border-radius:99px;height:100%}
+.vol-grid{display:grid;grid-template-columns:1fr 1fr;gap:9px 28px}
+.vol-row{}
+.vol-top{display:flex;justify-content:space-between;margin-bottom:4px}
+.vol-label{font-size:11px;color:#5C5750}
+.vol-val{font-size:10px;font-weight:700}
+.nonneg-grid{display:grid;grid-template-columns:repeat(3,1fr);gap:9px}
+.nonneg-card{background:#F9F8F4;border:1px solid #E4E1D8;border-radius:11px;padding:12px}
+.nonneg-icon{font-size:19px;margin-bottom:5px;display:block}
+.nonneg-lbl{font-size:9px;color:#9B9589;text-transform:uppercase;letter-spacing:.12em}
+.nonneg-val{font-size:12px;font-weight:600;margin-top:2px}
+.core-sum-grid{display:grid;grid-template-columns:1fr 1fr;gap:9px}
+.core-sum-card{border-radius:10px;padding:11px 13px;border-left:3px solid}
+.phase-btns{display:grid;grid-template-columns:repeat(3,1fr);gap:9px;margin-bottom:18px}
+.phase-btn{background:#fff;border:2px solid #E4E1D8;border-radius:12px;padding:14px 8px;cursor:pointer;text-align:center}
+.phase-btn.active{}
+.phase-icon{font-size:22px;display:block;margin-bottom:5px}
+.phase-name{font-size:10px;font-weight:700;letter-spacing:.1em;text-transform:uppercase}
+.phase-card{background:#fff;border:1px solid #E4E1D8;border-radius:14px;overflow:hidden;margin-bottom:14px}
+.phase-header{padding:17px 20px;border-bottom:1px solid #E4E1D8}
+.phase-label{font-family:'Barlow Condensed',sans-serif;font-size:26px;font-weight:900}
+.phase-tagline{font-size:12px;color:#9B9589;font-style:italic;margin-top:3px}
+.phase-body{display:grid;grid-template-columns:1fr 1fr;gap:0}
+.phase-col{padding:16px 20px}
+.phase-col:first-child{border-right:1px solid #E4E1D8}
+.phase-col-head{font-size:9px;color:#9B9589;text-transform:uppercase;letter-spacing:.12em;margin-bottom:11px}
+.bullet-row{display:flex;gap:9px;margin-bottom:7px;align-items:flex-start}
+.bullet-dot{width:5px;height:5px;border-radius:50%;margin-top:4px;flex-shrink:0}
+.bullet-text{font-size:11px;color:#5C5750;line-height:1.55}
+.day-icons{display:grid;grid-template-columns:repeat(7,1fr);gap:4px;margin-bottom:11px}
+.day-icon{border-radius:8px;padding:6px 3px;text-align:center;border-top:2px solid}
+.day-icon-emoji{font-size:12px}
+.day-icon-lbl{font-size:7px;font-weight:700;margin-top:3px;letter-spacing:.05em}
+.sched-row{display:flex;gap:10px;padding:6px 0;border-bottom:1px solid #E4E1D8;align-items:flex-start}
+.sched-day{font-size:9px;font-weight:700;color:#9B9589;width:28px;flex-shrink:0;padding-top:1px}
+.sched-session{font-size:11px}
+.sched-add{font-size:9px;color:#9B9589;margin-top:1px}
+.expand-card{background:#fff;border:1px solid #E4E1D8;border-radius:14px;margin-bottom:10px;overflow:hidden}
+.expand-card.open{border-color:rgba(0,0,0,.2)}
+.expand-btn{width:100%;background:none;border:none;cursor:pointer;padding:14px 18px;display:flex;align-items:center;gap:12px;text-align:left;font-family:'Outfit',sans-serif}
+.expand-dot{width:10px;height:10px;border-radius:50%;flex-shrink:0}
+.expand-name{font-family:'Barlow Condensed',sans-serif;font-size:18px;font-weight:900;letter-spacing:.06em}
+.expand-focus{font-size:10px;color:#9B9589;margin-top:2px}
+.expand-arrow{margin-left:auto;font-size:12px;color:#C4BFB5}
+.expand-body{border-top:1px solid #E4E1D8;display:none}
+.expand-body.open{display:block}
+.ex-legend{padding:8px 18px;background:#F9F8F4;border-bottom:1px solid #E4E1D8;display:flex;gap:18px}
+.ex-legend-item{display:flex;align-items:center;gap:5px;font-size:10px;color:#9B9589}
+.ex-legend-line{width:14px;height:2px;border-radius:99px;opacity:.5}
+.ex-row{display:flex;align-items:center;padding:11px 18px;gap:12px;border-bottom:1px solid #E4E1D8}
+.ex-row:last-child{border-bottom:none}
+.ex-num{width:26px;height:26px;border-radius:7px;display:flex;align-items:center;justify-content:center;font-size:10px;font-weight:700;flex-shrink:0}
+.ex-name-text{font-size:12px}
+.ex-note{font-size:10px;color:#9B9589;margin-top:2px}
+.ex-tag{display:inline-block;padding:1px 7px;border-radius:99px;font-size:9px;font-weight:700;text-transform:uppercase;letter-spacing:.08em;margin-left:6px}
+.ex-meta{display:flex;gap:14px;flex-shrink:0}
+.ex-sets-val,.ex-reps-val{font-size:14px;font-weight:700}
+.ex-lbl{font-size:8px;color:#C4BFB5;text-transform:uppercase}
+.ex-rest{font-size:10px;color:#9B9589}
+.compare-grid{display:grid;grid-template-columns:repeat(3,1fr);gap:10px;margin-top:12px}
+.compare-card{background:#fff;border:1px solid #E4E1D8;border-radius:12px;padding:14px}
+.compare-head{font-size:9px;color:#9B9589;text-transform:uppercase;letter-spacing:.12em;margin-bottom:10px}
+.compare-row{display:flex;align-items:center;gap:7px;margin-bottom:7px}
+.compare-dot{width:6px;height:6px;border-radius:50%;flex-shrink:0}
+.compare-phase{font-size:9px;color:#9B9589;width:60px}
+.compare-val{font-size:11px}
+.skills-grid{}
+.skill-row{display:flex;align-items:center;gap:10px;margin-bottom:8px}
+.skill-label{font-size:11px;color:#5C5750;width:185px;flex-shrink:0}
+.skill-pct{font-size:10px;font-weight:700;width:30px;text-align:right;flex-shrink:0}
+.zone-grid{display:grid;grid-template-columns:repeat(3,1fr);gap:9px;margin-bottom:13px}
+.zone-card{border-radius:10px;padding:12px;border-top:3px solid}
+.zone-name{font-family:'Barlow Condensed',sans-serif;font-size:14px;font-weight:800}
+.zone-intensity{font-size:10px;font-weight:600;margin-top:4px}
+.zone-feel{font-size:9px;color:#9B9589;margin-top:2px;font-style:italic}
+.zone-use{font-size:9px;font-weight:700;margin-top:7px}
+.proto-grid{display:grid;grid-template-columns:1fr 1fr;gap:10px;margin-bottom:12px}
+.proto-card{background:#fff;border:1px solid #E4E1D8;border-radius:13px;padding:15px}
+.proto-title{font-family:'Barlow Condensed',sans-serif;font-size:14px;font-weight:800;margin-bottom:10px}
+.proto-item{display:flex;gap:7px;margin-bottom:5px;align-items:flex-start}
+.proto-dot{width:4px;height:4px;border-radius:50%;margin-top:4px;flex-shrink:0}
+.proto-text{font-size:10px;color:#5C5750;line-height:1.5}
+.core-bars-grid{display:grid;grid-template-columns:1fr 1fr;gap:8px 20px}
+.mini-bar-bg{background:#E4E1D8;border-radius:99px;height:4px}
+.mini-bar-fill{border-radius:99px;height:100%}
+@media(max-width:420px){
+  .phase-body{grid-template-columns:1fr}
+  .phase-col:first-child{border-right:none;border-bottom:1px solid #E4E1D8}
+  .hero-cards{grid-template-columns:repeat(2,1fr)}
+  .vol-grid{grid-template-columns:1fr}
+  .compare-grid{grid-template-columns:1fr}
+  .proto-grid{grid-template-columns:1fr}
+}
+</style>
+</head>
+<body>
+
+<!-- HERO -->
+<div class="hero">
+  <div class="hero-chips">
+    <span class="chip" style="background:#10B98114;border:1px solid #10B98130;color:#10B981">Training Program</span>
+    <span class="chip" style="background:#0A8A6814;border:1px solid #0A8A6830;color:#0A8A68">Soccer Performance</span>
+  </div>
+  <div class="hero-title">BUILT FOR THE PITCH ⚽</div>
+  <div class="hero-sub">PPL 6-Day Hypertrophy · Right Winger<br>Strength + Soccer Conditioning + Core</div>
+  <div class="hero-cards">
+    <div class="hero-card" style="background:#10B98112;border:1px solid #10B98128">
+      <div class="hero-card-val" style="color:#10B981">+20lb</div>
+      <div class="hero-card-label">Size Goal</div>
+    </div>
+    <div class="hero-card" style="background:#D94F0A12;border:1px solid #D94F0A28">
+      <div class="hero-card-val" style="color:#D94F0A">PPL 6x</div>
+      <div class="hero-card-label">Program</div>
+    </div>
+    <div class="hero-card" style="background:#1B4FE412;border:1px solid #1B4FE428">
+      <div class="hero-card-val" style="color:#1B4FE4">8 / 12</div>
+      <div class="hero-card-label">Reps</div>
+    </div>
+    <div class="hero-card" style="background:#0A8A6812;border:1px solid #0A8A6828">
+      <div class="hero-card-val" style="color:#0A8A68">Sunday</div>
+      <div class="hero-card-label">Game Day</div>
+    </div>
+  </div>
+</div>
+
+<!-- TABS -->
+<div class="tabs">
+  <button class="tab-btn active" onclick="showTab('home',this)">Home</button>
+  <button class="tab-btn" onclick="showTab('training',this)">Training</button>
+  <button class="tab-btn" onclick="showTab('soccer',this)">Soccer</button>
+</div>
+
+<!-- HOME -->
+<div id="tab-home" class="content active">
+  <div class="banner" style="background:#1B4FE408;border:1px solid #1B4FE428;border-left:3px solid #1B4FE4">
+    <span class="banner-icon">📈</span>
+    <div><div class="banner-title" style="color:#1B4FE4">PROGRESSIVE OVERLOAD — THE ONLY RULE</div>
+    <div class="banner-body">Every session: add weight, add reps, or add a set. Log in Hevy. If none of the three happened — you maintained, not grew.</div></div>
+  </div>
+  <div class="banner" style="background:#D94F0A08;border:1px solid #D94F0A28;border-left:3px solid #D94F0A">
+    <span class="banner-icon">💡</span>
+    <div><div class="banner-title" style="color:#D94F0A">REP SCHEME — SIMPLE AND CLEAN</div>
+    <div class="banner-body">All compounds: 8 reps. All isolation: 12 reps. When you hit your reps cleanly on all sets — add weight next session.</div></div>
+  </div>
+  <div class="card">
+    <div class="card-head">WEEKLY SETS PER MUSCLE</div>
+    <div class="vol-grid" id="vol-grid"></div>
+  </div>
+  <div class="card">
+    <div class="card-head">NON-NEGOTIABLES 🔒</div>
+    <div class="nonneg-grid">
+      <div class="nonneg-card"><span class="nonneg-icon">🍗</span><div class="nonneg-lbl">Protein</div><div class="nonneg-val">150g+ daily</div></div>
+      <div class="nonneg-card"><span class="nonneg-icon">🔥</span><div class="nonneg-lbl">Calories</div><div class="nonneg-val">2,800–3,200</div></div>
+      <div class="nonneg-card"><span class="nonneg-icon">😴</span><div class="nonneg-lbl">Sleep</div><div class="nonneg-val">8+ hours</div></div>
+      <div class="nonneg-card"><span class="nonneg-icon">📊</span><div class="nonneg-lbl">Track</div><div class="nonneg-val">Log in Hevy</div></div>
+      <div class="nonneg-card"><span class="nonneg-icon">🍚</span><div class="nonneg-lbl">Carbs</div><div class="nonneg-val">Embrace them</div></div>
+      <div class="nonneg-card"><span class="nonneg-icon">♻️</span><div class="nonneg-lbl">Deload</div><div class="nonneg-val">Every 6–8 wks</div></div>
+    </div>
+  </div>
+  <div class="card">
+    <div class="card-head">CORE PROGRAM — 5 DIMENSIONS ✅</div>
+    <div class="core-sum-grid" id="core-sum-grid"></div>
+  </div>
+</div>
+
+<!-- TRAINING -->
+<div id="tab-training" class="content">
+  <div class="phase-btns">
+    <button class="phase-btn active" id="pbtn-pre" onclick="showPhase('pre')">
+      <span class="phase-icon">🔥</span><span class="phase-name" style="color:#D94F0A">Pre-Season</span>
+    </button>
+    <button class="phase-btn" id="pbtn-in" onclick="showPhase('in')">
+      <span class="phase-icon">⚽</span><span class="phase-name" style="color:#9B9589">In-Season</span>
+    </button>
+    <button class="phase-btn" id="pbtn-post" onclick="showPhase('post')">
+      <span class="phase-icon">🌙</span><span class="phase-name" style="color:#9B9589">Post-Season</span>
+    </button>
+  </div>
+  <div id="phase-content"></div>
+  <div id="ppl-section">
+    <div style="display:flex;justify-content:space-between;align-items:center;margin:18px 0 12px">
+      <div style="font-family:'Barlow Condensed',sans-serif;font-size:16px;font-weight:800;letter-spacing:.1em">PPL PROGRAM</div>
+      <span style="font-size:10px;font-weight:700;color:#0A8A68;background:#0A8A6814;border:1px solid #0A8A6830;padding:2px 9px;border-radius:99px;text-transform:uppercase;letter-spacing:.09em">Tap to expand</span>
+    </div>
+    <div class="banner" style="background:#1B4FE408;border:1px solid #1B4FE428;border-left:3px solid #1B4FE4;margin-bottom:14px">
+      <span class="banner-icon">📋</span>
+      <div><div class="banner-title" style="color:#1B4FE4">EXERCISE ORDER RULE</div>
+      <div class="banner-body">Heavy barbell → Barbell → Machine → Cable / Dumbbell isolation → Core last. Always.</div></div>
+    </div>
+    <div id="ppl-list"></div>
+  </div>
+  <div id="core-section">
+    <div style="font-family:'Barlow Condensed',sans-serif;font-size:16px;font-weight:800;letter-spacing:.1em;margin:20px 0 12px">CORE BREAKDOWN</div>
+    <div id="core-list"></div>
+  </div>
+</div>
+
+<!-- SOCCER -->
+<div id="tab-soccer" class="content">
+  <div class="card">
+    <div style="display:flex;justify-content:space-between;align-items:flex-start;flex-wrap:wrap;gap:10px;margin-bottom:16px">
+      <div>
+        <div style="font-family:'Barlow Condensed',sans-serif;font-size:20px;font-weight:800;letter-spacing:.08em">⚽ WINGER PERFORMANCE</div>
+        <div style="font-size:11px;color:#5C5750;margin-top:3px">Fix stamina · Build explosiveness · Dominate 1v1</div>
+      </div>
+      <div style="display:flex;gap:6px">
+        <div style="background:#1B4FE412;border:1px solid #1B4FE430;border-radius:8px;padding:6px 10px"><div style="font-size:9px;font-weight:700;color:#1B4FE4;letter-spacing:.1em">SPEED</div></div>
+        <div style="background:#D94F0A12;border:1px solid #D94F0A30;border-radius:8px;padding:6px 10px"><div style="font-size:9px;font-weight:700;color:#D94F0A;letter-spacing:.1em">STAMINA</div></div>
+        <div style="background:#0A8A6812;border:1px solid #0A8A6830;border-radius:8px;padding:6px 10px"><div style="font-size:9px;font-weight:700;color:#0A8A68;letter-spacing:.1em">POWER</div></div>
+      </div>
+    </div>
+    <div style="font-size:9px;color:#9B9589;text-transform:uppercase;letter-spacing:.12em;margin-bottom:12px">Skill Baselines — Update Monthly</div>
+    <div id="skills-list"></div>
+  </div>
+  <div class="card">
+    <div class="card-head">🏃 AEROBIC PLAN</div>
+    <div class="zone-grid" id="zone-grid"></div>
+    <div class="banner" style="background:#0A7EA408;border:1px solid #0A7EA428;border-left:3px solid #0A7EA4;margin-bottom:0">
+      <span class="banner-icon">💡</span>
+      <div><div class="banner-title" style="color:#0A7EA4">WHY ZONE 2 FIXES GETTING GASSED</div>
+      <div class="banner-body">25 min easy jog Thursday builds your mitochondria — the energy factories in your muscles. More mitochondria = recover faster between sprints = still running hard in the 85th minute.</div></div>
+    </div>
+  </div>
+  <div class="proto-grid" id="proto-grid"></div>
+  <div class="banner" style="background:#D94F0A08;border:1px solid #D94F0A28;border-left:3px solid #D94F0A">
+    <span class="banner-icon">⚠️</span>
+    <div><div class="banner-title" style="color:#D94F0A">HONEST TRUTH AT 150LB PLAYING FORWARD</div>
+    <div class="banner-body">Speed is your equalizer. A bigger defender cannot catch what he cannot touch. The gym makes you harder to push off the ball. HIIT makes you explosive. Zone 2 keeps you running hard in the 80th minute.</div></div>
+  </div>
+</div>
+
+<script>
+const C={bg:"#F4F2EC",surface:"#fff",card:"#fff",raised:"#F9F8F4",border:"#E4E1D8",text:"#161412",sub:"#5C5750",muted:"#9B9589",dim:"#C4BFB5",blue:"#1B4FE4",orange:"#D94F0A",teal:"#0A8A68",violet:"#6D28D9",red:"#C42020",cyan:"#0A7EA4",green:"#10B981"};
+
+const PHASES={
+  pre:{key:"pre",label:"Pre-Season",color:C.orange,icon:"🔥",tagline:"Build. Grow. Prepare.",focus:"Maximum muscle building and conditioning foundation",
+    schedule:[{day:"MON",session:"Pull 1",type:"pull",add:"Plyometrics before lifting"},{day:"TUE",session:"Push 1",type:"push",add:"HIIT after lifting — 20 min"},{day:"WED",session:"Legs 1",type:"legs",add:""},{day:"THU",session:"Pull 2",type:"pull",add:"Zone 2 Jog — 25 min after"},{day:"FRI",session:"Push 2",type:"push",add:""},{day:"SAT",session:"Legs 2",type:"legs",add:""},{day:"SUN",session:"REST",type:"rest",add:"Full rest"}],
+    bullets:["Full 6-day PPL at maximum volume","HIIT once per week — Tuesday after Push 1","Zone 2 jog once per week — Thursday after Pull 2","Plyometrics Monday before lifting only","Legs days kept completely clean","Caloric surplus — 2,800 to 3,200 cal daily"]},
+  in:{key:"in",label:"In-Season",color:C.blue,icon:"⚽",tagline:"Maintain. Perform. Dominate.",focus:"Maintain all gains — perform at peak on game day",
+    schedule:[{day:"MON",session:"Full Body A",type:"gym",add:"Heavy compounds"},{day:"TUE",session:"HIIT",type:"hiit",add:"Sprint intervals — 20 min"},{day:"WED",session:"Full Body B",type:"gym",add:"Power focus"},{day:"THU",session:"Recovery",type:"rest",add:"Stretch, skills, light walk"},{day:"FRI",session:"Plyos + Agility",type:"plyo",add:"20 min max"},{day:"SAT",session:"Pre-Game",type:"rest",add:"Light movement only"},{day:"SUN",session:"GAME DAY",type:"game",add:"Your full aerobic session"}],
+    bullets:["Drop to 4 gym days — full body A and B","Max 2 to 3 sets, max 8 reps to limit soreness","Sunday game is your aerobic session — no Zone 2 needed","Thursday is pure recovery — legs need it before Sunday","HIIT once Tuesday — top-end speed maintenance","Sleep 8 hours minimum — recovery is king"]},
+  post:{key:"post",label:"Post-Season",color:C.violet,icon:"🌙",tagline:"Recover. Reset. Grow Again.",focus:"Resume full PPL — biggest size building window of the year",
+    schedule:[{day:"MON",session:"Pull 1",type:"pull",add:"Plyometrics before lifting"},{day:"TUE",session:"Push 1",type:"push",add:"HIIT after lifting — 20 min"},{day:"WED",session:"Legs 1",type:"legs",add:""},{day:"THU",session:"Pull 2",type:"pull",add:"Zone 2 Jog — 25 min after"},{day:"FRI",session:"Push 2",type:"push",add:""},{day:"SAT",session:"Legs 2",type:"legs",add:""},{day:"SUN",session:"REST",type:"rest",add:"Full rest — non-negotiable"}],
+    bullets:["Take 1 to 2 weeks full rest after season ends","Resume full 6-day PPL with a recovered body","Chase strength PRs on every compound lift","HIIT Tuesday, Zone 2 Thursday — same as pre-season","Deload every 6 to 8 weeks without exception","Biggest muscle-building window of the year"]}
+};
+
+const IN_SEASON=[
+  {name:"FULL BODY A",day:"Monday",color:C.blue,tag:"Heavy",focus:"Heavy strength · Max 45 min",exercises:[
+    {name:"Squat (Barbell)",sets:3,reps:"8",rest:"3 min",note:"Strength anchor"},
+    {name:"Bench Press (Barbell)",sets:3,reps:"8",rest:"3 min",note:"Strength anchor"},
+    {name:"Romanian Deadlift",sets:3,reps:"8",rest:"2 min",note:"Stay low rep — hamstring health"},
+    {name:"Bent Over Row (Barbell)",sets:3,reps:"8",rest:"2 min",note:""},
+    {name:"Lateral Raise (Dumbbell)",sets:2,reps:"12",rest:"60 sec",note:"Maintenance volume"},
+    {name:"Dead Bug",sets:2,reps:"12",rest:"60 sec",note:"Core",core:true}]},
+  {name:"FULL BODY B",day:"Wednesday",color:C.teal,tag:"Power",focus:"Power and explosiveness · Max 45 min",exercises:[
+    {name:"Deadlift (Barbell)",sets:3,reps:"8",rest:"3 min",note:"Explosive intent"},
+    {name:"Bulgarian Split Squat",sets:3,reps:"8",rest:"2 min",note:"Unilateral power"},
+    {name:"Close Grip Bench Press",sets:3,reps:"8",rest:"2 min",note:""},
+    {name:"Chin Up (Assisted)",sets:3,reps:"8",rest:"2 min",note:""},
+    {name:"Face Pull (Cable)",sets:2,reps:"12",rest:"60 sec",note:"Shoulder health"},
+    {name:"Hanging Leg Raise",sets:2,reps:"12",rest:"60 sec",note:"Core",core:true}]}
+];
+
+const PPL=[
+  {name:"PULL 1",color:C.blue,type:"pull",focus:"Vertical + Horizontal pull · Back width · Traps · Core",exercises:[
+    {name:"Deadlift (Barbell)",sets:4,reps:"8",note:"Strength anchor — 3 to 4 min rest"},
+    {name:"Bent Over Row (Barbell)",sets:3,reps:"8",note:"Barbell compound"},
+    {name:"Iso-Lateral Low Row",sets:3,reps:"8",note:"Machine compound before cable"},
+    {name:"Lat Pulldown (Cable)",sets:3,reps:"8",note:""},
+    {name:"Shrug (Dumbbell)",sets:3,reps:"12",note:"Upper traps — hold at top 1 sec"},
+    {name:"Face Pull (Cable)",sets:3,reps:"12",note:"Rear delts — shoulder health"},
+    {name:"Bicep Curl (Dumbbell)",sets:3,reps:"12",note:""},
+    {name:"Cross Body Hammer Curl",sets:3,reps:"12",note:""},
+    {name:"Ab Wheel Rollout",sets:3,reps:"12",note:"Core — anti-extension",core:true,coreType:"Anti-Extension"}]},
+  {name:"PUSH 1",color:C.orange,type:"push",focus:"Chest strength · Pressing power · Core stability",exercises:[
+    {name:"Bench Press (Barbell)",sets:4,reps:"8",note:"Strength anchor — 3 min rest"},
+    {name:"Incline Bench Press (Barbell)",sets:3,reps:"8",note:"Upper chest"},
+    {name:"Overhead Press (Barbell)",sets:3,reps:"8",note:""},
+    {name:"Skullcrusher (Barbell)",sets:3,reps:"12",note:"Long head tricep — barbell before cables"},
+    {name:"Seated Chest Fly (Cable)",sets:3,reps:"12",note:""},
+    {name:"Lateral Raise (Dumbbell)",sets:4,reps:"12",note:"Side delt width"},
+    {name:"Tricep Rope Pushdown",sets:3,reps:"12",note:""},
+    {name:"Dead Bug",sets:3,reps:"12 each",note:"Core — stability",core:true,coreType:"Stability"}]},
+  {name:"LEGS 1",color:C.teal,type:"legs",focus:"Quad Led · Glute Power · Full Lower Body",exercises:[
+    {name:"Squat (Barbell)",sets:4,reps:"8",note:"Strength anchor — 3 to 4 min rest"},
+    {name:"Leg Press (Machine)",sets:3,reps:"8",note:""},
+    {name:"Bulgarian Split Squat",sets:3,reps:"8",note:"Unilateral compound"},
+    {name:"Hip Thrust (Barbell)",sets:3,reps:"8",note:"Glute priority"},
+    {name:"Standing Calf Raise",sets:4,reps:"12",note:""},
+    {name:"Cable Crunch",sets:3,reps:"12",note:"Core — weighted flexion",core:true,coreType:"Weighted Flexion"}]},
+  {name:"PULL 2",color:C.violet,type:"pull",focus:"Horizontal pull · Back thickness · Traps · Rotational core",exercises:[
+    {name:"Romanian Deadlift (Barbell)",sets:4,reps:"8",note:"Strength anchor — 2 to 3 min rest"},
+    {name:"Chin Up (Assisted)",sets:3,reps:"8",note:"Bodyweight compound before cable"},
+    {name:"Seated Cable Row (V-Grip)",sets:3,reps:"8",note:""},
+    {name:"Shrug (Dumbbell)",sets:3,reps:"12",note:"Upper traps — hold at top 1 sec"},
+    {name:"Bicep Curl (Barbell)",sets:3,reps:"12",note:"Barbell before cable curl"},
+    {name:"Straight Arm Lat Pulldown",sets:3,reps:"12",note:"Lat isolation — no biceps"},
+    {name:"Face Pull (Cable)",sets:3,reps:"12",note:"Rear delts — second hit"},
+    {name:"Hammer Curl (Cable)",sets:3,reps:"12",note:""},
+    {name:"Cable Woodchop",sets:3,reps:"12 each",note:"Core — rotational power",core:true,coreType:"Rotation"}]},
+  {name:"PUSH 2",color:"#C96A10",type:"push",focus:"Shoulder led · Chest isolation · Tricep detail",exercises:[
+    {name:"Close Grip Bench Press",sets:4,reps:"8",note:"Tricep anchor — 2 to 3 min rest"},
+    {name:"Shoulder Press (Dumbbell)",sets:3,reps:"8",note:"Free weight before machine"},
+    {name:"Iso-Lateral Chest Press",sets:3,reps:"8",note:""},
+    {name:"Chest Fly (Dumbbell)",sets:3,reps:"12",note:""},
+    {name:"Overhead Tricep Extension (Dumbbell)",sets:3,reps:"12",note:"Long head — full stretch"},
+    {name:"Rear Delt Fly (Cable)",sets:3,reps:"12",note:"Posture and shoulder health"},
+    {name:"Lateral Raise (Dumbbell)",sets:3,reps:"12",note:""},
+    {name:"Tricep Rope Pushdown",sets:3,reps:"12",note:"Lateral head finisher"}]},
+  {name:"LEGS 2",color:C.cyan,type:"legs",focus:"Hamstring led · Calf detail · Lower abs",exercises:[
+    {name:"Squat — Pause Reps",sets:3,reps:"8",note:"Time under tension — lighter than Legs 1"},
+    {name:"Dumbbell Step Up",sets:3,reps:"8",note:"Compound before isolation"},
+    {name:"Seated Leg Curl (Machine)",sets:4,reps:"12",note:"Hamstring isolation — slow eccentric"},
+    {name:"Leg Extension (Machine)",sets:3,reps:"12",note:""},
+    {name:"Seated Calf Raise",sets:4,reps:"12",note:"Soleus — pairs with standing raise"},
+    {name:"Hanging Leg Raise",sets:3,reps:"12",note:"Core — lower abs + hip flexors",core:true,coreType:"Lower Abs"}]}
+];
+
+const CORE_MAP=[
+  {day:"Pull 1",name:"Ab Wheel Rollout",equipment:"Ab wheel",color:C.blue,type:"Anti-Extension",hits:{rectus:90,obliques:75,transverse:95,hipflex:10},why:"Trains abs in a fully stretched position — highest hypertrophy stimulus. Best anti-extension exercise you can do."},
+  {day:"Push 1",name:"Dead Bug",equipment:"Zero — floor only",color:C.orange,type:"Stability",hits:{rectus:65,obliques:60,transverse:95,hipflex:70},why:"Mimics the running and sprinting pattern. Teaches your spine to stay neutral under load — transfers directly to squats and soccer."},
+  {day:"Legs 1",name:"Cable Crunch",equipment:"Cable machine",color:C.teal,type:"Weighted Flexion",hits:{rectus:95,obliques:55,transverse:40,hipflex:20},why:"Only ab exercise with constant tension through full range. Add weight every session — this is how abs actually grow."},
+  {day:"Pull 2",name:"Cable Woodchop",equipment:"Cable machine",color:C.violet,type:"Rotation",hits:{rectus:60,obliques:95,transverse:70,hipflex:30},why:"Resistance applied diagonally along oblique fiber direction. Directly transfers to shot power and crossing velocity."},
+  {day:"Legs 2",name:"Hanging Leg Raise",equipment:"Pull-up bar",color:"#0A7EA4",type:"Lower Abs",hits:{rectus:85,obliques:65,transverse:60,hipflex:90},why:"The only exercise ranked highly in ALL 4 major EMG studies. Best lower abs exercise. Progress: knee raise to straight leg to weighted."}
+];
+
+const VOLUME=[
+  {m:"Back / Lats",w:18,t:20},{m:"Chest",w:16,t:18},{m:"Shoulders",w:14,t:16},{m:"Rear Delts",w:12,t:14},
+  {m:"Triceps",w:13,t:14},{m:"Biceps",w:12,t:14},{m:"Quads",w:16,t:18},{m:"Hamstrings",w:16,t:18},
+  {m:"Calves",w:14,t:16},{m:"Core / Abs",w:15,t:16},{m:"Traps",w:12,t:12}
+];
+
+const SKILLS=[
+  {label:"Stamina — 90 min endurance",pct:40,color:C.red},
+  {label:"Explosive First Step",pct:55,color:C.orange},
+  {label:"1v1 Win Rate",pct:70,color:C.teal},
+  {label:"Left Foot Ability",pct:30,color:C.red},
+  {label:"Crossing Accuracy",pct:60,color:C.teal},
+  {label:"Sprint Recovery",pct:35,color:C.orange}
+];
+
+const typeColor={pull:C.blue,push:C.orange,legs:C.teal,gym:C.blue,hiit:C.orange,plyo:C.violet,rest:C.dim,game:C.blue};
+const typeIcon={pull:"⬇️",push:"⬆️",legs:"🦵",gym:"💪",hiit:"🏃",plyo:"⚡",rest:"😴",game:"⚽"};
+
+function bar(pct,color,h){h=h||5;return '<div class="bar-bg" style="height:'+h+'px"><div class="bar-fill" style="width:'+Math.min(pct,100)+'%;background:'+color+';height:100%"></div></div>';}
+
+function chip(color,text){return '<span style="display:inline-block;padding:1px 7px;border-radius:99px;font-size:9px;font-weight:700;text-transform:uppercase;letter-spacing:.08em;background:'+color+'18;border:1px solid '+color+'30;color:'+color+'">'+text+'</span>';}
+
+// Render volume
+function renderVolume(){
+  document.getElementById("vol-grid").innerHTML=VOLUME.map(v=>{
+    const pct=Math.round((v.w/v.t)*100),ok=pct>=85,col=ok?C.teal:C.orange;
+    return '<div class="vol-row"><div class="vol-top"><span class="vol-label">'+v.m+'</span><span class="vol-val" style="color:'+col+'">'+v.w+'/'+v.t+'</span></div>'+bar(pct,col)+'</div>';
+  }).join("");
+}
+
+// Render core summary (home tab)
+function renderCoreSummary(){
+  const items=CORE_MAP.map(c=>'<div class="core-sum-card" style="background:'+c.color+'08;border:1px solid '+c.color+'25;border-left-color:'+c.color+'"><div style="font-size:9px;color:'+c.color+';font-weight:700;text-transform:uppercase;letter-spacing:.1em;margin-bottom:3px">'+c.day+' · '+c.type+'</div><div style="font-size:12px;font-weight:600">'+c.name+'</div><div style="font-size:10px;color:#9B9589;margin-top:2px">🔧 '+c.equipment+'</div></div>').join("");
+  const check='<div style="background:#F9F8F4;border:1px solid #E4E1D8;border-radius:10px;padding:11px 13px;display:flex;align-items:center;gap:10px"><span style="font-size:20px">✅</span><div style="font-size:11px;color:#5C5750">Full core covered — flexion, extension, rotation, stability</div></div>';
+  document.getElementById("core-sum-grid").innerHTML=items+check;
+}
+
+// Render skills
+function renderSkills(){
+  document.getElementById("skills-list").innerHTML=SKILLS.map(s=>'<div class="skill-row"><span class="skill-label">'+s.label+'</span><div class="bar-bg" style="flex:1">'+bar(s.pct,s.color).replace('<div class="bar-bg"','<div')+'</div><span class="skill-pct" style="color:'+s.color+'">'+s.pct+'%</span></div>').join("");
+}
+
+// Render aerobic zones
+function renderZones(){
+  document.getElementById("zone-grid").innerHTML=[
+    {zone:"Zone 1",label:"Very Easy",feel:"Could sing",color:C.dim,use:"Warmup only"},
+    {zone:"Zone 2",label:"Easy-Moderate",feel:"Full conversation",color:C.cyan,use:"Thu after Pull 2"},
+    {zone:"Zone 3+",label:"Hard to Max",feel:"Can barely talk",color:C.orange,use:"Tue after Push 1"}
+  ].map(z=>'<div class="zone-card" style="background:'+z.color+'10;border-color:'+z.color+'20;border-top-color:'+z.color+'"><div class="zone-name" style="color:'+z.color+'">'+z.zone+'</div><div class="zone-intensity">'+z.label+'</div><div class="zone-feel">'+z.feel+'</div><div class="zone-use" style="color:'+z.color+'">'+z.use+'</div></div>').join("");
+}
+
+// Render protocols
+function renderProtos(){
+  document.getElementById("proto-grid").innerHTML=[
+    {title:"🏃 HIIT",color:C.orange,items:["30s sprint → 90s jog × 6 to 8 rounds","OR shuttle runs — 4 sets of 6","Tuesday only after Push 1","Never before a game"]},
+    {title:"⚡ Plyometrics",color:C.blue,items:["Box Jump — 3×6 to 8","Lateral Bound — 3×6 each","Depth Jump — 3×5","Single Leg Hop — 3×8"]},
+    {title:"🎯 Agility",color:C.teal,items:["Agility Ladder — 5 min","T-Drill — 4×30s","Cone Weave Sprint — 4 reps","5-10-5 Shuttle — 6 reps"]},
+    {title:"⚽ Ball Skills",color:C.violet,items:["Dribble at 80%, sprint finish","1v1 finishing reps","Crossing on the run — both feet","Left foot only: 15 min daily"]}
+  ].map(p=>'<div class="proto-card"><div class="proto-title" style="color:'+p.color+'">'+p.title+'</div>'+p.items.map(i=>'<div class="proto-item"><div class="proto-dot" style="background:'+p.color+'"></div><div class="proto-text">'+i+'</div></div>').join("")+'</div>').join("");
+}
+
+// Render PPL
+function renderPPL(){
+  document.getElementById("ppl-list").innerHTML=PPL.map(day=>{
+    const id="day-"+day.name.replace(/\s/g,"-");
+    const exRows=day.exercises.map((ex,i)=>{
+      const coreTag=ex.core?chip(C.teal,ex.coreType):"";
+      return '<div class="ex-row" style="background:'+( ex.core?C.teal+"07":"none")+'">'
+        +'<div class="ex-num" style="background:'+( ex.core?C.teal+"18":day.color+"12")+';color:'+(ex.core?C.teal:day.color)+'">'+(i+1)+'</div>'
+        +'<div style="flex:1"><div class="ex-name-text">'+ex.name+coreTag+'</div>'+(ex.note?'<div class="ex-note">'+ex.note+'</div>':"")+'</div>'
+        +'<div class="ex-meta">'
+        +'<div style="text-align:center"><div class="ex-sets-val">'+ex.sets+'</div><div class="ex-lbl">sets</div></div>'
+        +'<div style="text-align:center"><div class="ex-reps-val" style="color:'+day.color+'">'+ex.reps+'</div><div class="ex-lbl">reps</div></div>'
+        +'</div></div>';
+    }).join("");
+    return '<div class="expand-card" id="card-'+id+'">'
+      +'<button class="expand-btn" onclick="toggleExpand(\''+id+'\')">'
+      +'<div class="expand-dot" style="background:'+day.color+'"></div>'
+      +'<div style="flex:1"><div class="expand-name">'+day.name+'</div><div class="expand-focus">'+day.focus+'</div></div>'
+      +'<span style="font-size:10px;color:#C4BFB5">'+day.exercises.length+' ex</span>'
+      +'<span class="expand-arrow" id="arr-'+id+'">▼</span>'
+      +'</button>'
+      +'<div class="expand-body" id="'+id+'">'
+      +'<div class="ex-legend"><div class="ex-legend-item"><div class="ex-legend-line" style="background:'+day.color+'"></div>8 — Compound</div><div class="ex-legend-item"><div class="ex-legend-line" style="background:'+day.color+'"></div>12 — Isolation</div></div>'
+      +exRows
+      +'</div></div>';
+  }).join("");
+}
+
+// Render core expand
+function renderCore(){
+  document.getElementById("core-list").innerHTML=CORE_MAP.map(c=>{
+    const id="core-"+c.name.replace(/\s/g,"-");
+    const bars=[["Six-Pack",c.hits.rectus],["Obliques",c.hits.obliques],["Deep Core",c.hits.transverse],["Hip Flexors",c.hits.hipflex]].map(([l,v])=>'<div><div style="display:flex;justify-content:space-between;margin-bottom:3px"><span style="font-size:10px;color:#5C5750">'+l+'</span><span style="font-size:10px;font-weight:700;color:'+(v>=80?c.color:C.muted)+'">'+v+'%</span></div>'+bar(v,v>=80?c.color:C.muted,4)+'</div>').join("");
+    return '<div class="expand-card" id="card-'+id+'">'
+      +'<button class="expand-btn" onclick="toggleExpand(\''+id+'\')">'
+      +'<div class="expand-dot" style="background:'+c.color+'"></div>'
+      +'<div style="flex:1"><div style="display:flex;align-items:center;gap:7px;flex-wrap:wrap"><span class="expand-name" style="font-size:16px">'+c.name+'</span>'+chip(c.color,c.type)+chip(C.muted,c.day)+'</div><div style="font-size:10px;color:#9B9589;margin-top:2px">🔧 '+c.equipment+'</div></div>'
+      +'<span class="expand-arrow" id="arr-'+id+'">▼</span>'
+      +'</button>'
+      +'<div class="expand-body" id="'+id+'"><div style="padding:15px 18px"><div style="font-size:12px;color:#5C5750;line-height:1.7;margin-bottom:13px">'+c.why+'</div><div class="core-bars-grid">'+bars+'</div></div></div></div>';
+  }).join("");
+}
+
+// Phase render
+let currentPhase="pre";
+function showPhase(key){
+  currentPhase=key;
+  const p=PHASES[key];
+  // Update buttons
+  ["pre","in","post"].forEach(k=>{
+    const btn=document.getElementById("pbtn-"+k);
+    const pk=PHASES[k];
+    if(k===key){btn.style.borderColor=pk.color;btn.style.background=pk.color+"0D";btn.querySelector(".phase-name").style.color=pk.color;}
+    else{btn.style.borderColor="#E4E1D8";btn.style.background="#fff";btn.querySelector(".phase-name").style.color="#9B9589";}
+  });
+
+  // Show/hide PPL and core sections
+  const pplSec=document.getElementById("ppl-section");
+  const coreSec=document.getElementById("core-section");
+  if(key==="in"){pplSec.style.display="none";coreSec.style.display="none";}
+  else{pplSec.style.display="block";coreSec.style.display="block";}
+
+  // Day icons
+  const iconMap={pull:["⬇️",C.blue],push:["⬆️",C.orange],legs:["🦵",C.teal],gym:["💪",C.blue],hiit:["🏃",C.orange],plyo:["⚡",C.violet],rest:["😴",C.dim],game:["⚽",C.blue]};
+  const dayIcons=p.schedule.map(s=>{const[ico,col]=iconMap[s.type]||["📅",C.muted];return'<div class="day-icon" style="background:'+col+'10;border-color:'+col+'30;border-top-color:'+col+'"><div class="day-icon-emoji">'+ico+'</div><div class="day-icon-lbl" style="color:'+col+'">'+s.day+'</div></div>';}).join("");
+  const schedRows=p.schedule.map(s=>'<div class="sched-row"><div class="sched-day">'+s.day+'</div><div><div class="sched-session" style="color:'+((s.type==="rest"||s.type==="game")?p.color:C.text)+';font-weight:'+(s.type==="game"?700:400)+'">'+s.session+'</div>'+(s.add?'<div class="sched-add">'+s.add+'</div>':"")+' </div></div>').join("");
+  const bullets=p.bullets.map(b=>'<div class="bullet-row"><div class="bullet-dot" style="background:'+p.color+'"></div><div class="bullet-text">'+b+'</div></div>').join("");
+
+  let html='<div class="phase-card" style="border-top:3px solid '+p.color+'">'
+    +'<div class="phase-header" style="background:'+p.color+'06"><div class="phase-label" style="color:'+p.color+'">'+p.label.toUpperCase()+'</div><div class="phase-tagline">'+p.tagline+'</div></div>'
+    +'<div class="phase-body">'
+    +'<div class="phase-col"><div class="phase-col-head">Approach</div>'+bullets+'</div>'
+    +'<div class="phase-col"><div class="phase-col-head">Weekly Schedule</div><div class="day-icons">'+dayIcons+'</div>'+schedRows+'</div>'
+    +'</div></div>';
+
+  // In-season workout cards
+  if(key==="in"){
+    IN_SEASON.forEach(w=>{
+      const wid="workout-"+w.name.replace(/\s/g,"-");
+      const exRows=w.exercises.map((ex,i)=>'<div class="ex-row" style="background:'+( ex.core?C.teal+"07":"none")+'">'
+        +'<div class="ex-num" style="background:'+( ex.core?C.teal+"18":w.color+"12")+';color:'+(ex.core?C.teal:w.color)+'">'+(i+1)+'</div>'
+        +'<div style="flex:1"><div class="ex-name-text">'+ex.name+(ex.core?chip(C.teal,"Core"):"")+'</div>'+(ex.note?'<div class="ex-note">'+ex.note+'</div>':"")+'</div>'
+        +'<div class="ex-meta">'
+        +'<div style="text-align:center"><div class="ex-sets-val">'+ex.sets+'</div><div class="ex-lbl">sets</div></div>'
+        +'<div style="text-align:center"><div class="ex-reps-val" style="color:'+w.color+'">'+ex.reps+'</div><div class="ex-lbl">reps</div></div>'
+        +'<div style="text-align:center"><div class="ex-rest">'+ex.rest+'</div><div class="ex-lbl">rest</div></div>'
+        +'</div></div>').join("");
+      html+='<div class="expand-card" id="card-'+wid+'" style="border-top:3px solid '+w.color+'">'
+        +'<button class="expand-btn" onclick="toggleExpand(\''+wid+'\')" style="background:none">'
+        +'<div class="expand-dot" style="background:'+w.color+'"></div>'
+        +'<div style="flex:1"><div style="display:flex;align-items:center;gap:8px"><span class="expand-name">'+w.name+'</span>'+chip(w.color,w.tag)+'<span style="font-size:10px;color:#9B9589">'+w.day+'</span></div><div class="expand-focus">'+w.focus+'</div></div>'
+        +'<span class="expand-arrow" id="arr-'+wid+'">▼</span>'
+        +'</button>'
+        +'<div class="expand-body" id="'+wid+'">'+exRows+'</div></div>';
+    });
+  }
+
+  document.getElementById("phase-content").innerHTML=html;
+}
+
+function toggleExpand(id){
+  const body=document.getElementById(id);
+  const arr=document.getElementById("arr-"+id);
+  const card=document.getElementById("card-"+id);
+  const open=body.classList.contains("open");
+  body.classList.toggle("open",!open);
+  if(arr)arr.textContent=open?"▼":"▲";
+  if(card)card.classList.toggle("open",!open);
+}
+
+function showTab(name,btn){
+  document.querySelectorAll(".content").forEach(c=>c.classList.remove("active"));
+  document.querySelectorAll(".tab-btn").forEach(b=>b.classList.remove("active"));
+  document.getElementById("tab-"+name).classList.add("active");
+  btn.classList.add("active");
+}
+
+// Init
+renderVolume();
+renderCoreSummary();
+renderSkills();
+renderZones();
+renderProtos();
+renderPPL();
+renderCore();
+showPhase("pre");
+
+if("serviceWorker" in navigator){
+  window.addEventListener("load",()=>navigator.serviceWorker.register("/my-training/sw.js").catch(()=>{}));
+}
+</script>
+</body>
+</html>
